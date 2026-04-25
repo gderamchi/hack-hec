@@ -58,7 +58,11 @@ export const ANALYSIS_KEYWORD_RULES: Record<string, KeywordRule> = {
   },
   "PSR-TXN-001": {
     keywords: ["transaction monitoring", "risk score", "velocity", "alert"],
-    strongKeywords: ["threshold", "rules", "false positive"],
+    strongKeywords: [
+      "transaction monitoring rules",
+      "alert thresholds",
+      "false positive review"
+    ],
     task: "Document transaction monitoring thresholds and alert review evidence",
     owner: "Fraud Data"
   },

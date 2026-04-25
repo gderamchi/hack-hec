@@ -27,10 +27,14 @@ function main() {
   const completeResult = gatedResult(fullServiceProfile, [syntheticDocs.complete]);
   const partialResult = gatedResult(fullServiceProfile, [syntheticDocs.partial]);
   const emptyResult = gatedResult(fullServiceProfile, [syntheticDocs.empty]);
+  const expectedOnlyResult = gatedResult(fullServiceProfile, [
+    syntheticDocs.expectedOnly
+  ]);
 
   assertAllStatuses(completeResult, "Covered");
   assertAllStatuses(partialResult, "Partially covered");
   assertAllStatuses(emptyResult, "Not evidenced");
+  assertAllStatuses(expectedOnlyResult, "Not evidenced");
 
   console.log(
     JSON.stringify(
@@ -38,7 +42,8 @@ function main() {
         generatedDir,
         completeSummary: completeResult.summary,
         partialSummary: partialResult.summary,
-        emptySummary: emptyResult.summary
+        emptySummary: emptyResult.summary,
+        expectedOnlySummary: expectedOnlyResult.summary
       },
       null,
       2
@@ -50,6 +55,7 @@ function generateSyntheticDocuments(): {
   complete: UploadedDocument;
   partial: UploadedDocument;
   empty: UploadedDocument;
+  expectedOnly: UploadedDocument;
 } {
   mkdirSync(generatedDir, { recursive: true });
   const requirements = getRelevantRequirements(fullServiceProfile);
@@ -75,10 +81,19 @@ The policy sets ownership and governance for ${requirement.domain}. Operational 
     .join("\n\n");
   const empty =
     "Atlas Payments EU corporate overview. The company supports merchant commerce operations in the European Union.";
+  const expectedOnly = requirements
+    .map(
+      (requirement) => `Requirement ${requirement.id}: ${requirement.title}
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+${requirement.expectedEvidence.map((item) => `- ${item}`).join("\n")}`
+    )
+    .join("\n\n");
 
   writeFixture("covered-pack.txt", complete);
   writeFixture("partial-pack.txt", partial);
   writeFixture("not-evidenced-pack.txt", empty);
+  writeFixture("expected-only-pack.txt", expectedOnly);
 
   return {
     complete: {
@@ -95,6 +110,11 @@ The policy sets ownership and governance for ${requirement.domain}. Operational 
       name: "not-evidenced-pack.txt",
       type: "text/plain",
       content: empty
+    },
+    expectedOnly: {
+      name: "expected-only-pack.txt",
+      type: "text/plain",
+      content: expectedOnly
     }
   };
 }

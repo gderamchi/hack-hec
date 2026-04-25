@@ -1,0 +1,311 @@
+Requirement PSR-PAYEE-001: Verify payee name before credit transfer execution
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- payee-name or IBAN-name verification flow
+- match, close-match and mismatch decision logic
+- customer notification copy before execution
+- audit events proving the check was offered and displayed
+
+Requirement PSR-FRAUD-001: Operate risk-based fraud prevention controls
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraud policy
+- risk scoring model and control ownership
+- case management workflow
+- periodic rule review and tuning evidence
+
+Requirement PSR-TXN-001: Monitor payment transactions for abnormal behavior
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- transaction monitoring rules
+- behavioral and environmental risk indicators
+- alert thresholds and review procedure
+- false positive and drift review evidence
+
+Requirement PSR-WARN-001: Warn customers when suspected payment fraud is detected
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- customer warning flow
+- scam and impersonation warning copy
+- trigger conditions
+- audit trail of warnings shown
+
+Requirement PSR-APPFRAUD-001: Define impersonation and APP fraud liability handling
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- APP fraud intake procedure
+- impersonation scenario decision tree
+- liability assessment checklist
+- customer outcome and reimbursement templates
+
+Requirement PSR-LIAB-001: Define customer reimbursement and liability handling
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- reimbursement workflow
+- liability decision criteria
+- customer communication template
+- appeal or dispute escalation path
+
+Requirement PSR-TRANS-001: Communicate payment risks, fees and outcomes clearly
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- customer communication templates
+- payment status and receipt copy
+- fee and currency conversion disclosure
+- support escalation messaging
+
+Requirement PSR-INC-001: Escalate fraud incidents with ownership and timelines
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraud incident escalation policy
+- triage severity model
+- owner and SLA matrix
+- post-incident review template
+
+Requirement PSD3-SCA-001: Apply SCA to high-risk payment and account access events
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- SCA policy
+- MFA, possession, inherence or knowledge flow
+- step-up triggers
+- authentication audit events
+
+Requirement PSD3-SCA-002: Define SCA fallback and exemption logic
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- SCA exemption policy
+- fallback procedure
+- risk acceptance criteria
+- failed authentication handling
+
+Requirement PSD3-SCA-003: Provide accessible SCA methods for all customer groups
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- accessible SCA option
+- non-smartphone authentication path
+- accessibility testing evidence
+- customer support fallback process
+
+Requirement PSD3-OB-001: Maintain a reliable dedicated open banking interface
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- dedicated interface documentation
+- availability and latency metrics
+- third-party access and onboarding procedure
+- incident status and communication process
+
+Requirement PSD3-OB-002: Provide a user dashboard for open banking permissions
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- permission dashboard
+- active consent list
+- revoke access action
+- customer communication copy
+
+Requirement PSD3-OB-003: Capture and manage user consent lifecycle
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- consent endpoint documentation
+- consent scope model
+- consent expiry and renewal logic
+- consent revocation audit records
+
+Requirement PSR-DATA-001: Govern fraud data sharing and special category processing
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraud information sharing arrangement
+- data protection impact assessment
+- personal data minimisation controls
+- supervisory authority consultation record where required
+
+Requirement PSD3-LIC-001: Evidence operational readiness for regulated services
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- operational readiness register
+- regulated service scope
+- outsourcing control inventory
+- governance owner
+
+Requirement PSD3-SAFE-001: Safeguard payment and e-money customer funds
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- safeguarding policy
+- customer funds reconciliation evidence
+- bank account diversification or concentration risk assessment
+- board or compliance oversight record
+
+Requirement PSR-CASH-001: Document cash withdrawal service disclosures where relevant
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- cash withdrawal flow
+- ATM or merchant withdrawal fee disclosure
+- customer receipt or statement evidence
+- support handling for failed withdrawals
+
+Requirement PSR-INSTANT-001: Evidence instant payment reachability and beneficiary verification
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- instant payment receive and send support evidence
+- fee parity control
+- beneficiary verification evidence
+- operational monitoring for instant payments
+
+Requirement PSR-AUDIT-001: Keep audit evidence for payments, consent and fraud decisions
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- audit log schema
+- retention policy
+- decision history
+- export or review workflow
+
+Requirement PSR-LIMIT-001: Offer spending limits and payment blocking measures
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- spending-limit configuration flow
+- payment instrument or account blocking control
+- risk-based trigger logic for limits and blocks
+- audit evidence for customer changes and fraud blocks
+
+Requirement PSR-SUSPICIOUS-001: Freeze suspicious received transactions
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- incoming transaction suspicious-activity rules
+- freeze or hold workflow for receiving PSP operations
+- release/escalation approval procedure
+- customer and counterparty communication templates
+
+Requirement PSR-IMPERSONATION-001: Refund qualifying PSP impersonation fraud cases
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- PSP impersonation fraud intake procedure
+- police report and PSP notification evidence checklist
+- full refund decision workflow
+- customer outcome template and audit trail
+
+Requirement PSR-UNAUTH-001: Treat fraudster-initiated or altered transactions as unauthorised
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraudster-initiated transaction classification rules
+- altered transaction investigation workflow
+- full amount reimbursement decision criteria
+- case evidence and customer notification templates
+
+Requirement PSR-HUMAN-001: Provide human customer support for payment users
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- human support access channel
+- support hours and escalation rules
+- chatbot handoff procedure
+- support accessibility and audit evidence
+
+Requirement PSR-ADR-001: Participate in alternative dispute resolution when chosen by consumers
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- ADR procedure and competent body mapping
+- consumer election and consent capture
+- case handoff workflow
+- outcome recording and customer communication templates
+
+Requirement PSR-FEE-001: Disclose all charges before payment initiation
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- pre-payment fee disclosure screen
+- currency conversion charge calculation
+- fixed fee disclosure by channel
+- receipt and audit evidence of displayed charges
+
+Requirement PSR-CASH-002: Support retail cash withdrawals without purchase where offered
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- retail cash withdrawal flow without purchase
+- minimum and maximum withdrawal rule handling
+- merchant or retailer operational procedure
+- customer fee and failure disclosure
+
+Requirement PSR-ATM-001: Display ATM fees and exchange rates before withdrawal
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- ATM fee pre-disclosure screen
+- exchange-rate display logic
+- customer acknowledgement or cancellation path
+- cash withdrawal receipt evidence
+
+Requirement PSR-OB-004: Remove prohibited obstacles to open banking data access
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- open banking obstacle assessment
+- third-party provider access test evidence
+- non-discrimination controls for ASPSP interfaces
+- incident and denial reason logs
+
+Requirement PSD3-ACCOUNT-001: Provide payment institutions with non-discriminatory payment account access
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- payment institution account access policy
+- objective onboarding and refusal criteria
+- account access SLA and escalation process
+- refusal or restriction audit trail
+
+Requirement PSR-MOBILE-001: Ensure FRAND access to mobile device and electronic service capabilities
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- mobile device or electronic service dependency map
+- FRAND access assessment
+- front-end payment data storage and transfer controls
+- vendor restriction escalation evidence
+
+Requirement PSD3-AUTH-001: Maintain PSD3 authorisation and prudential application evidence
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- authorisation application pack
+- initial capital and own-funds calculation
+- budget forecast and business plan
+- service-by-service risk and control mapping
+
+Requirement PSD3-TRANSITION-001: Plan re-authorisation for existing PSD2 and e-money activities
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- existing licence inventory
+- PSD3 re-authorisation timeline
+- gap assessment against new application requirements
+- board or compliance approval record
+
+Requirement PSD3-PASSPORT-001: Evidence right-of-establishment and freedom-to-provide-services notifications
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- host Member State services inventory
+- right of establishment or freedom to provide services notification
+- branch or agent register evidence
+- competent-authority correspondence
+
+Requirement PSR-PLATFORM-001: Escalate fraudulent content to online platforms and recover platform-liability evidence
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraudulent content notification procedure
+- platform takedown evidence
+- customer reimbursement and platform recovery workflow
+- DSA-linked escalation records
+
+Requirement PSR-ADS-001: Verify authorisation evidence for financial services advertising
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- advertiser authorisation or exemption evidence
+- country-by-country advertising approval record
+- platform submission proof
+- marketing and legal review workflow
+
+Requirement PSR-EDU-001: Provide fraud education and awareness content
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraud education content
+- customer campaign or in-product awareness flow
+- impersonation scam guidance
+- content review and effectiveness evidence
+
+Requirement PSR-FRAUD-REPORT-001: Report fraud data and monitor fraud trends by payment instrument
+Atlas Payments EU document request.
+Expected evidence checklist requested from operating teams:
+- fraud reporting data model
+- payment instrument fraud taxonomy
+- semi-annual reporting workflow
+- management review of fraud trends and mitigants

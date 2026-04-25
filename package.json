@@ -8,6 +8,8 @@
     "lint": "eslint app data lib scripts --max-warnings=0",
     "start": "next start",
     "test:evidence": "node -r tsconfig-paths/register -r sucrase/register scripts/evidence-gate-regression.ts",
+    "test:complex": "node -r tsconfig-paths/register -r sucrase/register scripts/complex-usecase-regression.ts",
+    "test:complex:prod": "COMPLEX_E2E_TARGET=prod node -r tsconfig-paths/register -r sucrase/register scripts/complex-usecase-regression.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

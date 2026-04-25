@@ -58,8 +58,13 @@ const EXPECTED_ONLY_CONTEXT_PATTERNS = [
   /\bevidence pack for demo\b/i,
   /\bdemo evidence\b/i,
   /\bdemo finding examples\b/i,
+  /\bdocument request\b/i,
+  /\bexpected evidence checklist\b/i,
+  /\bexpected evidence\b/i,
+  /\brequired evidence\b/i,
+  /\bevidence required\b/i,
   /\bminimum documents\b/i,
-  /\bexpected\b/i
+  /\brequested from\b/i
 ];
 
 const OPERATIONAL_PATTERNS = [
@@ -184,8 +189,7 @@ function gateRequirement({
   const status = inferGatedStatus({
     requirement,
     bestHit,
-    expectedHits,
-    strongestEvidence
+    expectedHits
   });
   const missingEvidence = inferMissingEvidence({
     requirement,
@@ -227,13 +231,11 @@ function gateRequirement({
 function inferGatedStatus({
   requirement,
   bestHit,
-  expectedHits,
-  strongestEvidence
+  expectedHits
 }: {
   requirement: Requirement;
   bestHit?: EvidenceHit;
   expectedHits: ExpectedEvidenceHit[];
-  strongestEvidence: number;
 }): RequirementStatus {
   if (!bestHit) {
     return "Not evidenced";
@@ -245,7 +247,9 @@ function inferGatedStatus({
       : expectedHits.length / requirement.expectedEvidence.length;
   const canBeCovered =
     expectedCoverage >= 1 &&
-    strongestEvidence >= evidenceStrength("operational_artifact");
+    expectedHits.every(
+      (item) => item.hit.strength >= evidenceStrength("operational_artifact")
+    );
 
   return canBeCovered ? "Covered" : "Partially covered";
 }
@@ -269,13 +273,21 @@ function inferMissingEvidence({
 
   const matched = new Set(expectedHits.map((item) => item.expectedEvidence));
   const missing = requirement.expectedEvidence.filter((item) => !matched.has(item));
+  const nonOperationalMatches = expectedHits.filter(
+    (item) => item.hit.strength < evidenceStrength("operational_artifact")
+  );
 
   if (
     missing.length === 0 &&
-    strongestEvidence < evidenceStrength("operational_artifact")
+    (strongestEvidence < evidenceStrength("operational_artifact") ||
+      nonOperationalMatches.length > 0)
   ) {
     missing.push(
-      "operational artifact proving the control is implemented, tested and retained"
+      nonOperationalMatches.length > 0
+        ? `operational artifact for ${nonOperationalMatches
+            .map((item) => item.expectedEvidence)
+            .join("; ")}`
+        : "operational artifact proving the control is implemented, tested and retained"
     );
   }
 
@@ -383,6 +395,7 @@ function findEvidence(
       const excerpt = createExcerpt(document.content, index);
       if (isNegativeEvidenceContext(excerpt)) continue;
       const evidenceType = classifyEvidence(document.content, index, excerpt);
+      if (evidenceType === "demo_placeholder") continue;
       return {
         sourceDocument: document.name,
         excerpt,
