@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "eslint app data lib --max-warnings=0",
+    "lint": "eslint app data lib scripts --max-warnings=0",
     "start": "next start",
+    "test:evidence": "node -r tsconfig-paths/register -r sucrase/register scripts/evidence-gate-regression.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

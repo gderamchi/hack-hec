@@ -1,8 +1,8 @@
-import { PSD3_PSR_REQUIREMENTS } from "@/data/psd3-psr-requirements";
 import {
   DEFAULT_OPENAI_MODEL,
   DEFAULT_OPENAI_REASONING_EFFORT
 } from "@/lib/app-config";
+import { getRelevantRequirements } from "@/lib/requirement-scope";
 import { analysisResultSchema } from "@/lib/schemas";
 import {
   DISCLAIMER,
@@ -71,7 +71,7 @@ export async function analyzeWithOpenAI(
                 disclaimer: DISCLAIMER,
                 companyProfile: input.companyProfile,
                 documents: input.documents,
-                requirementBase: PSD3_PSR_REQUIREMENTS
+                requirementBase: getRelevantRequirements(input.companyProfile)
               })
             }
           ],

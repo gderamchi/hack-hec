@@ -1,4 +1,4 @@
-import { PSD3_PSR_REQUIREMENTS } from "@/data/psd3-psr-requirements";
+import { getRelevantRequirements } from "@/lib/requirement-scope";
 import {
   DISCLAIMER,
   type AnalysisResult,
@@ -24,7 +24,7 @@ type EvidenceHit = {
   matchedKeyword: string;
 };
 
-const RULES: Record<string, KeywordRule> = {
+export const ANALYSIS_KEYWORD_RULES: Record<string, KeywordRule> = {
   "PSR-PAYEE-001": {
     keywords: [
       "payee verification",
@@ -44,7 +44,14 @@ const RULES: Record<string, KeywordRule> = {
     owner: "Product + Engineering"
   },
   "PSR-FRAUD-001": {
-    keywords: ["fraud policy", "fraud engine", "fraud operations", "case management"],
+    keywords: [
+      "fraud policy",
+      "fraud prevention",
+      "fraud engine",
+      "fraud operations",
+      "case management",
+      "fraud prevention and strong customer authentication control framework"
+    ],
     strongKeywords: ["risk score", "manual review", "control register"],
     task: "Strengthen fraud-control evidence pack and warning triggers",
     owner: "Fraud Operations"
@@ -110,7 +117,14 @@ const RULES: Record<string, KeywordRule> = {
     owner: "Platform Engineering"
   },
   "PSD3-OB-002": {
-    keywords: ["permission dashboard", "active consent list", "revoke access", "manage permissions"],
+    keywords: [
+      "permission dashboard",
+      "active consent list",
+      "revoke access",
+      "manage permissions",
+      "customer permissions should be visible",
+      "permissions should be visible"
+    ],
     strongKeywords: ["user dashboard", "customer-facing dashboard"],
     task: "Build user permission dashboard for open banking consents",
     owner: "Product + Engineering"
@@ -128,7 +142,7 @@ const RULES: Record<string, KeywordRule> = {
     owner: "Legal + Fraud Data"
   },
   "PSD3-LIC-001": {
-    keywords: ["electronic money institution", "regulated", "outsourcing", "governance"],
+    keywords: ["electronic money institution", "authorisation", "licence", "outsourcing"],
     strongKeywords: ["operational readiness register", "regulated service scope", "control inventory"],
     task: "Create operational readiness register for regulated payment services",
     owner: "Compliance Leadership"
@@ -176,7 +190,14 @@ const RULES: Record<string, KeywordRule> = {
     owner: "Compliance + Fraud"
   },
   "PSR-UNAUTH-001": {
-    keywords: ["unauthorised transaction", "unauthorized transaction", "altered transaction", "fraudster initiated"],
+    keywords: [
+      "unauthorised transaction",
+      "unauthorized transaction",
+      "unauthorised or disputed activity",
+      "unauthorized or disputed activity",
+      "altered transaction",
+      "fraudster initiated"
+    ],
     strongKeywords: ["full fraudulent amount", "fraudster changed", "fraudster initiated", "unauthorised classification"],
     task: "Classify fraudster-initiated or altered transactions as unauthorised",
     owner: "Compliance + Support"
@@ -212,7 +233,14 @@ const RULES: Record<string, KeywordRule> = {
     owner: "Product + Compliance"
   },
   "PSR-OB-004": {
-    keywords: ["prohibited obstacle", "open banking obstacle", "third-party provider access", "non-discrimination"],
+    keywords: [
+      "prohibited obstacle",
+      "open banking obstacle",
+      "third-party provider access",
+      "third-party access should be governed",
+      "third-party access",
+      "non-discrimination"
+    ],
     strongKeywords: ["obstacle assessment", "access denial", "aspsp interface", "data access test"],
     task: "Remove prohibited obstacles to open banking data access",
     owner: "Platform Engineering"
@@ -242,7 +270,16 @@ const RULES: Record<string, KeywordRule> = {
     owner: "Legal + Compliance"
   },
   "PSD3-PASSPORT-001": {
-    keywords: ["passporting", "freedom to provide services", "right of establishment", "branch", "agent register"],
+    keywords: [
+      "passporting",
+      "freedom to provide services",
+      "right of establishment",
+      "branch",
+      "agent register",
+      "expand to additional eu markets",
+      "home member state",
+      "eu markets"
+    ],
     strongKeywords: ["host member state", "competent authority", "services notification", "branch register"],
     task: "Maintain passporting and cross-border services evidence",
     owner: "Compliance Operations"
@@ -261,7 +298,12 @@ const RULES: Record<string, KeywordRule> = {
   },
   "PSR-EDU-001": {
     keywords: ["fraud education", "awareness", "scam guidance", "avoid fraud", "customer education"],
-    strongKeywords: ["impersonation scam", "campaign", "in-product awareness", "effectiveness"],
+    strongKeywords: [
+      "impersonation scam",
+      "campaign",
+      "in-product awareness",
+      "fraud education effectiveness"
+    ],
     task: "Launch and evidence customer fraud education measures",
     owner: "Fraud + Customer Support"
   },
@@ -313,9 +355,7 @@ export function runFallbackAnalysis(
   companyProfile: CompanyProfile,
   documents: UploadedDocument[]
 ): AnalysisResult {
-  const relevantRequirements = PSD3_PSR_REQUIREMENTS.filter((requirement) =>
-    isRelevantRequirement(requirement, companyProfile)
-  );
+  const relevantRequirements = getRelevantRequirements(companyProfile);
   const matrix = relevantRequirements.map((requirement) =>
     analyzeRequirement(requirement, documents)
   );
@@ -334,7 +374,7 @@ function analyzeRequirement(
   requirement: Requirement,
   documents: UploadedDocument[]
 ): EvidenceMatrixItem {
-  const rule = RULES[requirement.id];
+  const rule = ANALYSIS_KEYWORD_RULES[requirement.id];
   const hit = findEvidence(documents, rule?.keywords ?? [requirement.title]);
   const strongHit = findEvidence(documents, rule?.strongKeywords ?? []);
   const status = inferStatus(requirement.id, hit, strongHit);
@@ -435,21 +475,6 @@ function findEvidence(
   return undefined;
 }
 
-function isRelevantRequirement(
-  requirement: Requirement,
-  companyProfile: CompanyProfile
-): boolean {
-  if (requirement.relevantFor.includes(companyProfile.companyType)) {
-    return true;
-  }
-
-  return (
-    requirement.serviceTriggers?.some((service) =>
-      companyProfile.services.includes(service)
-    ) ?? false
-  );
-}
-
 function createExcerpt(content: string, index: number): string {
   const start = Math.max(0, index - 110);
   const end = Math.min(content.length, index + 220);
@@ -477,7 +502,7 @@ function createRoadmap(matrix: EvidenceMatrixItem[]): RoadmapTask[] {
 
   return candidates.map((item) => ({
     title: item.recommendedTask,
-    owner: RULES[item.requirementId]?.owner ?? ownerForDomain(item.domain),
+    owner: ANALYSIS_KEYWORD_RULES[item.requirementId]?.owner ?? ownerForDomain(item.domain),
     priority: item.priority,
     deadline: deadlineForPriority(item.priority),
     evidenceRequired:

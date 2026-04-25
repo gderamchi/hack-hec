@@ -1,6 +1,7 @@
 import { evaluateRequiredDocuments } from "@/data/document-requirements";
 import { analyzeWithOpenAI } from "@/lib/ai-analyzer";
 import { REGULATORY_SOURCE_SUMMARY } from "@/lib/app-config";
+import { applyEvidenceGate } from "@/lib/evidence-gate";
 import { runFallbackAnalysis } from "@/lib/fallback-analyzer";
 import { persistAnalysisRun } from "@/lib/persistence";
 import { analyzeRequestSchema, analysisResultSchema } from "@/lib/schemas";
@@ -47,8 +48,13 @@ export async function POST(request: Request) {
     : null;
   const usedFallback = !completedAiResult;
   const result = completedAiResult?.result ?? fallbackBaseline;
+  const gated = applyEvidenceGate({
+    companyProfile: parsed.data.companyProfile,
+    documents: parsed.data.documents,
+    result
+  });
   const normalizedResult = normalizeResult({
-    ...result,
+    ...gated.result,
     disclaimer: DISCLAIMER,
     diagnostics: buildDiagnostics({
       engine: usedFallback ? "fallback" : "openai",
@@ -57,20 +63,31 @@ export async function POST(request: Request) {
       warnings: usedFallback
         ? [
             ...aiOutcome.warnings,
+            ...gated.warnings,
             "The returned matrix was produced by the deterministic keyword fallback."
           ]
-        : [...aiOutcome.warnings, ...completedAiResult.warnings]
+        : [...aiOutcome.warnings, ...completedAiResult.warnings, ...gated.warnings]
     })
   });
   const validated = analysisResultSchema.safeParse(normalizedResult);
 
   if (!validated.success) {
+    const fallbackBaselineResult = runFallbackAnalysis(
+      parsed.data.companyProfile,
+      parsed.data.documents
+    );
+    const fallbackGate = applyEvidenceGate({
+      companyProfile: parsed.data.companyProfile,
+      documents: parsed.data.documents,
+      result: fallbackBaselineResult
+    });
     const fallback = normalizeResult({
-      ...runFallbackAnalysis(parsed.data.companyProfile, parsed.data.documents),
+      ...fallbackGate.result,
       diagnostics: buildDiagnostics({
         engine: "fallback",
         warnings: [
           "The OpenAI result did not validate against the app schema.",
+          ...fallbackGate.warnings,
           "The returned matrix was produced by the deterministic keyword fallback."
         ]
       })

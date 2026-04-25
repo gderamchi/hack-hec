@@ -170,7 +170,12 @@ export const PSD3_PSR_REQUIREMENTS: Requirement[] = [
       "Neobank",
       "Payment Orchestrator"
     ],
-    serviceTriggers: ["Multi-currency transfers", "Card payments", "Merchant acquiring"],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Multi-currency transfers",
+      "Card payments",
+      "Merchant acquiring"
+    ],
     sourceInstrument: "PSR proposal",
     sourceReference: "Transparency of conditions and information requirements",
     sourceUrl: PSR_URL
