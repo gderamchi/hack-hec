@@ -10,14 +10,22 @@ const config: Config = {
     extend: {
       colors: {
         ink: "#101828",
-        slateLine: "#d9e2ec",
-        regGreen: "#087f5b",
-        regBlue: "#2563eb",
-        regAmber: "#d97706",
-        regRed: "#dc2626"
+        paper: "#fbf7ff",
+        surface: "#ffffff",
+        surfaceMuted: "#f2ecf7",
+        slateLine: "#ded4e8",
+        muted: "#766487",
+        mutedInk: "#31243e",
+        primary: "#2b004b",
+        primarySoft: "#efe3ff",
+        regGreen: "#0b7a59",
+        regBlue: "#6d31d9",
+        regAmber: "#b76a00",
+        regRed: "#c52828"
       },
       boxShadow: {
-        soft: "0 18px 55px rgba(16, 24, 40, 0.08)"
+        soft: "0 18px 55px rgba(43, 0, 75, 0.08)",
+        panel: "0 18px 50px rgba(43, 0, 75, 0.08)"
       }
     }
   },

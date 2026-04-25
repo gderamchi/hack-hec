@@ -6,6 +6,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typedRoutes: false,
+  devIndicators: false,
+  allowedDevOrigins: ["127.0.0.1"],
   serverExternalPackages: ["pdf-parse"],
   turbopack: {
     root: __dirname

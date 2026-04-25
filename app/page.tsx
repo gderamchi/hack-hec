@@ -21,13 +21,13 @@ import {
   Upload,
   X
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   evaluateRequiredDocuments,
   type RequiredDocumentStatus
 } from "@/data/document-requirements";
 import { PSD3_PSR_REQUIREMENTS } from "@/data/psd3-psr-requirements";
-import { PRODUCT_CONFIG, REGULATORY_SOURCE_SUMMARY } from "@/lib/app-config";
+import { PRODUCT_CONFIG } from "@/lib/app-config";
 import {
   COMPANY_TYPES,
   COUNTRIES,
@@ -59,6 +59,12 @@ const INSIGHTS = [
   "SCA coverage includes fallback, exemptions and accessibility for non-smartphone users."
 ];
 
+const FIELD_CONTROL_CLASS =
+  "mt-2 w-full rounded-lg border border-slateLine bg-surface px-3.5 py-3 text-sm text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition placeholder:text-muted/70 hover:border-muted focus:border-primary";
+
+const OUTLINE_BUTTON_CLASS =
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-slateLine bg-surface px-4 py-2.5 text-sm font-semibold text-mutedInk shadow-sm transition hover:border-muted hover:bg-surfaceMuted";
+
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("landing");
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile>(
@@ -86,6 +92,10 @@ export default function Home() {
     () => evaluateRequiredDocuments(companyProfile, documents),
     [companyProfile, documents]
   );
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [screen]);
 
   async function handleUpload(files: FileList | null) {
     if (!files) return;
@@ -222,7 +232,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f6f8fb] text-ink">
+    <main className="min-h-screen bg-paper text-ink">
       <AppHeader
         screen={screen}
         onStart={() => setScreen("scope")}
@@ -235,6 +245,9 @@ export default function Home() {
             <WorkflowRail screen={screen} />
           </aside>
           <section className="min-w-0 flex-1">
+            <div className="no-print mb-4 lg:hidden">
+              <WorkflowRail screen={screen} variant="mobile" />
+            </div>
             {screen === "scope" ? (
               <CompanyScopeStep
                 profile={companyProfile}
@@ -289,7 +302,7 @@ export default function Home() {
         <Landing onStart={() => setScreen("scope")} />
       )}
 
-      <footer className="border-t border-slateLine bg-white/80 px-4 py-4 text-center text-xs text-slate-600">
+      <footer className="border-t border-slateLine bg-surface/90 px-4 py-4 text-center text-xs text-mutedInk">
         {DISCLAIMER}
       </footer>
 
@@ -320,31 +333,31 @@ function AppHeader({
   onReset: () => void;
 }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-slateLine bg-white/92 backdrop-blur no-print">
-      <div className="mx-auto flex max-w-[1560px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-slateLine bg-surface/95 backdrop-blur no-print">
+      <div className="mx-auto flex max-w-[1560px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <button
           type="button"
           onClick={onReset}
-          className="flex items-center gap-3 text-left"
+          className="flex min-w-0 items-center gap-3 text-left"
           aria-label={`Return to ${PRODUCT_CONFIG.name} landing page`}
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-ink text-white">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span>
-            <span className="block text-sm font-semibold leading-5">{PRODUCT_CONFIG.name}</span>
-            <span className="block text-xs text-slate-500">
+          <span className="min-w-0">
+            <span className="display-serif block truncate text-xl leading-6">{PRODUCT_CONFIG.name}</span>
+            <span className="block truncate text-xs text-mutedInk">
               {PRODUCT_CONFIG.tagline}
             </span>
           </span>
         </button>
 
-        <div className="hidden items-center gap-2 rounded-full border border-slateLine bg-slate-50 p-1 text-xs text-slate-600 md:flex">
+        <div className="hidden items-center gap-2 rounded-full border border-slateLine bg-surfaceMuted p-1 text-xs text-mutedInk md:flex">
           {["Scope", "Documents", "Agent", "Results"].map((item) => (
             <span
               key={item}
               className={`rounded-full px-3 py-1.5 ${
-                isActiveNav(item, screen) ? "bg-white font-semibold text-ink shadow-sm" : ""
+                isActiveNav(item, screen) ? "bg-surface font-semibold text-primary shadow-sm" : ""
               }`}
             >
               {item}
@@ -355,11 +368,16 @@ function AppHeader({
         <button
           type="button"
           onClick={onStart}
-          className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+          aria-label="Start review"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-ink sm:px-4"
         >
           <Play className="h-4 w-4" aria-hidden="true" />
-          Start review
+          <span className="whitespace-nowrap sm:hidden">Start</span>
+          <span className="hidden whitespace-nowrap sm:inline">Start review</span>
         </button>
+      </div>
+      <div className="hidden border-t border-primary/10 bg-primary px-4 py-3 text-center text-sm font-medium text-white sm:block">
+        PSD3/PSR evidence, scope, and remediation backlog in one audit-ready workflow
       </div>
     </header>
   );
@@ -367,74 +385,134 @@ function AppHeader({
 
 function Landing({ onStart }: { onStart: () => void }) {
   return (
-    <section className="mx-auto grid min-h-[calc(100vh-120px)] max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:px-8">
-      <div>
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-slateLine bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
+    <section className="mx-auto grid min-h-[calc(100vh-112px)] max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.84fr_1.16fr] lg:px-8">
+      <div className="max-w-2xl">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-slateLine bg-surface px-3 py-1.5 text-xs font-semibold text-mutedInk shadow-sm">
           <ShieldCheck className="h-4 w-4 text-regBlue" aria-hidden="true" />
           Built for European payment fintechs
         </div>
-        <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl">
-          PSD3/PSR readiness evidence in one workspace.
+        <h1 className="display-serif text-4xl font-normal leading-[0.98] text-ink sm:text-6xl lg:text-7xl">
+          PSD3/PSR readiness in minutes, not weeks.
         </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-          {PRODUCT_CONFIG.name} maps payment flows, fraud policies, SCA evidence,
-          open banking APIs and customer support procedures against source-backed
-          PSD3/PSR controls.
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-mutedInk">
+          {PRODUCT_CONFIG.name} turns payment flows, fraud policies, SCA evidence and
+          open banking APIs into a source-backed readiness matrix and remediation backlog.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-ink"
           >
             Start assessment
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
           <a
             href="#how-it-works"
-            className="inline-flex items-center justify-center rounded-lg border border-slateLine bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
+            className="inline-flex items-center justify-center rounded-lg border border-slateLine bg-surface px-5 py-3 text-sm font-semibold text-mutedInk transition hover:border-muted"
           >
             See workflow
           </a>
         </div>
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
+        <div className="mt-10 hidden gap-3 sm:grid sm:grid-cols-3">
           <ProofPoint label="Matrix" value={`${PSD3_PSR_REQUIREMENTS.length} controls`} />
-          <ProofPoint label="AI mode" value="OpenAI visible" />
-          <ProofPoint label="Output" value="Report + CSV" />
+          <ProofPoint label="Fallback" value="No AI key needed" />
+          <ProofPoint label="Output" value="Board report" />
         </div>
       </div>
 
-      <div className="rounded-xl border border-slateLine bg-white p-4 shadow-soft">
-        <div className="flex items-center justify-between border-b border-slateLine pb-4">
-          <div>
-            <p className="text-xs font-semibold uppercase text-slate-500">Coverage model</p>
-            <h2 className="mt-1 text-xl font-semibold">Readiness command center</h2>
-          </div>
-          <StatusBadge status="Partially covered" />
-        </div>
-        <div className="grid gap-4 py-5 sm:grid-cols-4">
-          <MetricCard label="Controls" value={PSD3_PSR_REQUIREMENTS.length} tone="blue" />
-          <MetricCard label="Sources" value={REGULATORY_SOURCE_SUMMARY.length} tone="green" />
-          <MetricCard label="PDF" value="Enabled" tone="amber" />
-          <MetricCard label="Storage" value="Supabase" tone="gray" />
-        </div>
-        <div className="overflow-hidden rounded-lg border border-slateLine">
-          {[
-            ["Payee Verification", "Critical"],
-            ["APP Fraud Liability", "Critical"],
-            ["Open Banking Dashboard", "High"],
-            ["SCA Accessibility", "High"]
-          ].map(([domain, priority]) => (
-            <div
-              key={domain}
-              className="grid grid-cols-[1.1fr_0.8fr_0.5fr] gap-3 border-b border-slateLine bg-white px-4 py-3 text-sm last:border-b-0"
-            >
-              <span className="font-medium">{domain}</span>
-              <span className="text-xs font-semibold text-slate-500">Control</span>
-              <PriorityBadge priority={priority as Priority} />
+      <div className="overflow-hidden rounded-lg border border-slateLine bg-surface shadow-panel">
+        <div className="flex min-h-[390px] bg-surface sm:min-h-[470px]">
+          <aside className="hidden w-32 shrink-0 border-r border-slateLine bg-surfaceMuted/80 p-4 sm:block">
+            <div className="mb-6 h-2.5 w-20 rounded-full bg-primary" />
+            <div className="flex flex-col gap-3">
+              {["Overview", "Evidence", "Controls", "Tasks", "Sources"].map((item, index) => (
+                <div
+                  key={item}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold ${
+                    index === 0 ? "bg-primary text-white" : "bg-surface text-mutedInk"
+                  }`}
+                >
+                  {item}
+                </div>
+              ))}
             </div>
-          ))}
+          </aside>
+          <div className="min-w-0 flex-1 p-4 sm:p-5">
+            <div className="flex items-start justify-between gap-4 border-b border-slateLine pb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+                  Flowpay workspace
+                </p>
+                <h2 className="mt-1 text-xl font-semibold">Readiness command center</h2>
+              </div>
+              <StatusBadge status="Partially covered" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 py-5 sm:grid-cols-4">
+              <MetricCard label="Analyzed" value="14" tone="blue" />
+              <MetricCard label="Covered" value="2" tone="green" />
+              <MetricCard label="Partial" value="7" tone="amber" />
+              <MetricCard label="No evidence" value="2" tone="red" />
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-[1fr_0.82fr]">
+              <div className="overflow-hidden rounded-lg border border-slateLine bg-surface">
+                <div className="flex items-center justify-between border-b border-slateLine bg-surfaceMuted px-4 py-3">
+                  <p className="text-sm font-semibold">Control evidence map</p>
+                  <span className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-mutedInk">
+                    Live
+                  </span>
+                </div>
+                {[
+                  ["Payee Verification", "Not evidenced"],
+                  ["Customer Warning Flows", "Not evidenced"],
+                  ["Open Banking Consent", "Partially covered"],
+                  ["SCA Fallback / Exemptions", "Needs human review"]
+                ].map(([domain, status]) => (
+                  <div
+                    key={domain}
+                    className="grid grid-cols-[1fr_auto] gap-3 border-b border-slateLine px-4 py-3 text-sm last:border-b-0"
+                  >
+                    <span className="font-medium">{domain}</span>
+                    <StatusBadge status={status as RequirementStatus} />
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-lg border border-slateLine bg-primarySoft/50 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">Board report</p>
+                  <FileDown className="h-4 w-4 text-regBlue" aria-hidden="true" />
+                </div>
+                <div className="mt-5 flex flex-col gap-4">
+                  {[
+                    ["Scope locked", "90%"],
+                    ["Evidence parsed", "74%"],
+                    ["Backlog ready", "58%"]
+                  ].map(([label, value]) => (
+                    <div key={label}>
+                      <div className="mb-2 flex items-center justify-between text-xs font-semibold text-mutedInk">
+                        <span>{label}</span>
+                        <span>{value}</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-surface">
+                        <div
+                          className="h-2 rounded-full bg-primary"
+                          style={{ width: value }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 rounded-lg border border-slateLine bg-surface p-3 text-xs leading-5 text-mutedInk">
+                  The AI output separates product gaps, compliance owner tasks and
+                  evidence required for sign-off.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -481,13 +559,17 @@ function CompanyScopeStep({
       <div className="flex flex-col gap-3 border-b border-slateLine pb-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-regBlue">Step 1</p>
-          <h1 className="mt-1 text-3xl font-semibold">Tell us about your payment fintech</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+          <h1 className="display-serif mt-1 text-4xl font-normal leading-tight">
+            Tell us about your payment fintech
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-mutedInk">
             Select the regulated entity type and every payment service that should drive the
             compliance scope and required evidence pack.
           </p>
         </div>
-        <Building2 className="h-8 w-8 text-slate-400" aria-hidden="true" />
+        <span className="hidden size-12 items-center justify-center rounded-lg bg-primarySoft text-regBlue sm:flex">
+          <Building2 className="h-6 w-6" aria-hidden="true" />
+        </span>
       </div>
 
       {error ? (
@@ -504,7 +586,8 @@ function CompanyScopeStep({
             onChange={(event) =>
               onChange({ ...profile, companyName: event.target.value })
             }
-            className="mt-2 w-full rounded-lg border border-slateLine bg-white px-3 py-3 text-sm"
+            placeholder="Atlas Payments"
+            className={FIELD_CONTROL_CLASS}
           />
         </label>
 
@@ -518,7 +601,7 @@ function CompanyScopeStep({
                 companyType: event.target.value as CompanyProfile["companyType"]
               })
             }
-            className="mt-2 w-full rounded-lg border border-slateLine bg-white px-3 py-3 text-sm"
+            className={FIELD_CONTROL_CLASS}
           >
             {COMPANY_TYPES.map((type) => (
               <option key={type}>{type}</option>
@@ -536,7 +619,7 @@ function CompanyScopeStep({
                 country: event.target.value as CompanyProfile["country"]
               })
             }
-            className="mt-2 w-full rounded-lg border border-slateLine bg-white px-3 py-3 text-sm"
+            className={FIELD_CONTROL_CLASS}
           >
             {COUNTRIES.map((country) => (
               <option key={country}>{country}</option>
@@ -544,16 +627,24 @@ function CompanyScopeStep({
           </select>
         </label>
 
-        <div className="rounded-lg border border-slateLine bg-slate-50 p-4">
-          <p className="text-sm font-semibold">Positioning guardrail</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
+        <div className="rounded-lg border border-slateLine bg-primarySoft/70 p-4">
+          <p className="text-sm font-semibold text-primary">Positioning guardrail</p>
+          <p className="mt-2 text-sm leading-6 text-mutedInk">
             Output is a readiness assessment and backlog, not legal certification.
           </p>
         </div>
       </div>
 
       <div>
-        <p className="text-sm font-semibold">Services / flows</p>
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold">Services / flows</p>
+            <p className="text-sm text-mutedInk">Select every flow that changes the PSD3/PSR scope.</p>
+          </div>
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+            {profile.services.length} selected
+          </span>
+        </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((service) => {
             const selected = profile.services.includes(service);
@@ -562,14 +653,20 @@ function CompanyScopeStep({
                 key={service}
                 type="button"
                 onClick={() => onToggleService(service)}
-                className={`flex min-h-14 items-center justify-between rounded-lg border px-3 py-3 text-left text-sm transition ${
+                className={`flex min-h-[72px] items-start justify-between gap-3 rounded-lg border px-4 py-3 text-left text-sm shadow-sm transition ${
                   selected
-                    ? "border-regBlue bg-blue-50 text-regBlue"
-                    : "border-slateLine bg-white text-slate-700 hover:border-slate-300"
+                    ? "border-regBlue bg-primarySoft text-primary"
+                    : "border-slateLine bg-surface text-mutedInk hover:border-muted hover:bg-surfaceMuted/70"
                 }`}
               >
-                <span>{service}</span>
-                {selected ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : null}
+                <span className="leading-5">{service}</span>
+                <span
+                  className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border ${
+                    selected ? "border-regBlue bg-regBlue text-white" : "border-slateLine bg-surface"
+                  }`}
+                >
+                  {selected ? <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> : null}
+                </span>
               </button>
             );
           })}
@@ -581,7 +678,7 @@ function CompanyScopeStep({
           type="button"
           onClick={onNext}
           disabled={!canContinue}
-          className="inline-flex items-center gap-2 rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-50"
         >
           Continue to documents
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -620,27 +717,35 @@ function DocumentsStep({
       <div className="flex flex-col gap-3 border-b border-slateLine pb-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-regBlue">Step 2</p>
-          <h1 className="mt-1 text-3xl font-semibold">Upload the required evidence documents</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+          <h1 className="display-serif mt-1 text-4xl font-normal leading-tight">
+            Upload the required evidence documents
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-mutedInk">
             The required document list is generated from the services selected in scope.
             Analysis is blocked until every required evidence pack is represented.
           </p>
         </div>
-        <FileText className="h-8 w-8 text-slate-400" aria-hidden="true" />
+        <span className="hidden size-12 items-center justify-center rounded-lg bg-primarySoft text-regBlue sm:flex">
+          <FileText className="h-6 w-6" aria-hidden="true" />
+        </span>
       </div>
 
-      <div className="grid gap-4 py-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <label className="rounded-lg border border-dashed border-slate-300 bg-white p-5 transition hover:border-regBlue">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 text-slate-700">
+      <div className="grid items-start gap-4 py-6 lg:grid-cols-[0.88fr_1.12fr]">
+        <label className="group flex min-h-[236px] cursor-pointer flex-col justify-between rounded-lg border border-dashed border-primary/25 bg-primarySoft/45 p-5 transition hover:border-regBlue hover:bg-primarySoft">
+          <div className="flex items-start gap-3">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface text-primary shadow-sm">
               <Upload className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
               <p className="font-semibold">Upload PDF, .txt or .md</p>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm leading-6 text-mutedInk">
                 {isExtractingDocuments ? "Extracting documents..." : "PDF text is extracted before upload"}
               </p>
             </div>
+          </div>
+          <div className="mt-6 rounded-lg border border-slateLine bg-surface px-4 py-3 text-xs leading-5 text-mutedInk shadow-sm">
+            Drop the evidence pack here, or click to browse. Required packs update from
+            the selected services.
           </div>
           <input
             type="file"
@@ -652,21 +757,23 @@ function DocumentsStep({
           />
         </label>
 
-        <div className="rounded-lg border border-slateLine bg-slate-50 p-5">
+        <div className="rounded-lg border border-slateLine bg-surfaceMuted/55 p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-semibold">Required evidence for selected services</p>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-mutedInk">
                 {documentCheck.required.length} pack(s), {documentCheck.missing.length} missing.
               </p>
             </div>
-            <ClipboardList className="h-5 w-5 text-slate-400" aria-hidden="true" />
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface text-mutedInk">
+              <ClipboardList className="h-5 w-5" aria-hidden="true" />
+            </span>
           </div>
-          <div className="mt-4 max-h-80 space-y-3 overflow-y-auto pr-1">
+          <div className="mt-4 flex max-h-64 flex-col gap-3 overflow-y-auto pr-1">
             {documentCheck.required.map((requirement) => (
               <div
                 key={requirement.id}
-                className={`rounded-lg border bg-white p-3 ${
+                className={`rounded-lg border bg-surface p-3 shadow-sm ${
                   requirement.satisfiedBy.length
                     ? "border-green-200"
                     : "border-amber-200"
@@ -675,7 +782,7 @@ function DocumentsStep({
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold">{requirement.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-slate-600">
+                    <p className="mt-1 text-xs leading-5 text-mutedInk">
                       {requirement.description}
                     </p>
                   </div>
@@ -685,7 +792,7 @@ function DocumentsStep({
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-regAmber" aria-hidden="true" />
                   )}
                 </div>
-                <p className="mt-2 text-xs font-semibold text-slate-500">
+                <p className="mt-2 text-xs font-semibold text-muted">
                   {requirement.satisfiedBy.length
                     ? `Matched: ${requirement.satisfiedBy.join(", ")}`
                     : `Needed for: ${requirement.requirementIds.join(", ")}`}
@@ -707,10 +814,10 @@ function DocumentsStep({
         </div>
       ) : null}
 
-      <div className="rounded-lg border border-slateLine bg-white">
+      <div className="rounded-lg border border-slateLine bg-surface">
         <div className="flex items-center justify-between border-b border-slateLine px-4 py-3">
           <p className="font-semibold">Documents ready for analysis</p>
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
+          <span className="rounded-full bg-surfaceMuted px-2.5 py-1 text-xs font-semibold text-mutedInk">
             {documents.length} file(s)
           </span>
         </div>
@@ -725,7 +832,7 @@ function DocumentsStep({
                   <FileCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-regGreen" aria-hidden="true" />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{document.name}</p>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-muted">
                       {document.content.length.toLocaleString()} characters extracted
                     </p>
                   </div>
@@ -733,7 +840,7 @@ function DocumentsStep({
                 <button
                   type="button"
                   onClick={() => onRemoveDocument(document.name)}
-                  className="inline-flex items-center gap-1 self-start rounded-lg border border-slateLine px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300"
+                  className="inline-flex items-center gap-1 self-start rounded-lg border border-slateLine px-3 py-2 text-xs font-semibold text-mutedInk transition hover:border-muted"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                   Remove
@@ -742,8 +849,9 @@ function DocumentsStep({
             ))}
           </div>
         ) : (
-          <div className="px-4 py-10 text-center text-sm text-slate-500">
-            No documents loaded yet.
+          <div className="flex flex-col items-center gap-3 px-4 py-10 text-center text-sm text-muted">
+            <FileText className="h-6 w-6" aria-hidden="true" />
+            <span>No documents loaded yet.</span>
           </div>
         )}
       </div>
@@ -752,7 +860,7 @@ function DocumentsStep({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-slateLine bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
+          className={OUTLINE_BUTTON_CLASS}
         >
           Back
         </button>
@@ -760,7 +868,7 @@ function DocumentsStep({
           type="button"
           onClick={onRun}
           disabled={isExtractingDocuments}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink"
         >
           Run PSD3/PSR readiness assessment
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -784,28 +892,30 @@ function ProcessingStep({
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-sm font-semibold text-regBlue">Step 3</p>
-          <h1 className="mt-1 text-3xl font-semibold">Agent is building your readiness matrix</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-600">
+          <h1 className="display-serif mt-1 text-4xl font-normal leading-tight">
+            Agent is building your readiness matrix
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-mutedInk">
             The workflow reads {documentCount} document(s), maps evidence against
             source-backed PSD3/PSR controls and prepares a board-ready backlog.
           </p>
-          <div className="mt-6 rounded-lg border border-slateLine bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+          <div className="mt-6 rounded-lg border border-slateLine bg-surfaceMuted p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
               Live insights
             </p>
             <div className="mt-3 grid gap-3">
               {INSIGHTS.map((insight, index) => (
                 <div
                   key={insight}
-                  className={`rounded-lg border bg-white p-3 text-sm shadow-sm transition ${
+                  className={`rounded-lg border bg-surface p-3 text-sm shadow-sm transition ${
                     index <= currentIndex
-                      ? "border-amber-200 text-slate-800"
-                      : "border-slateLine text-slate-400"
+                      ? "border-amber-200 text-ink"
+                      : "border-slateLine text-muted"
                   }`}
                 >
                   <AlertTriangle
                     className={`mr-2 inline h-4 w-4 ${
-                      index <= currentIndex ? "text-regAmber" : "text-slate-300"
+                      index <= currentIndex ? "text-regAmber" : "text-muted"
                     }`}
                     aria-hidden="true"
                   />
@@ -816,14 +926,14 @@ function ProcessingStep({
           </div>
         </div>
 
-        <div className="rounded-xl border border-slateLine bg-white p-5 shadow-sm">
+        <div className="rounded-lg border border-slateLine bg-surface p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
             <p className="font-semibold">Agent timeline</p>
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-regBlue">
+            <span className="rounded-full bg-primarySoft px-3 py-1 text-xs font-semibold text-regBlue">
               {isAnalyzing ? "Running" : "Finalizing"}
             </span>
           </div>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {PROCESSING_STEPS.map((step, index) => {
               const complete = index < currentIndex;
               const active = index === currentIndex;
@@ -835,7 +945,7 @@ function ProcessingStep({
                         ? "border-green-200 bg-green-50 text-regGreen"
                         : active
                           ? "border-blue-200 bg-blue-50 text-regBlue"
-                          : "border-slateLine bg-slate-50 text-slate-400"
+                          : "border-slateLine bg-surfaceMuted text-muted"
                     }`}
                   >
                     {complete ? (
@@ -849,7 +959,7 @@ function ProcessingStep({
                   </span>
                   <div>
                     <p className="text-sm font-semibold">{step}</p>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-muted">
                       {active ? "Analyzing evidence and gaps..." : complete ? "Completed" : "Queued"}
                     </p>
                   </div>
@@ -881,13 +991,15 @@ function ResultsDashboard({
   onReset: () => void;
 }) {
   return (
-    <div className="space-y-5">
+    <div className="flex flex-col gap-5">
       <Panel>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <p className="text-sm font-semibold text-regBlue">Step 4</p>
-            <h1 className="mt-1 text-3xl font-semibold">PSD3/PSR readiness dashboard</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+            <h1 className="display-serif mt-1 text-4xl font-normal leading-tight">
+              PSD3/PSR readiness dashboard
+            </h1>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-mutedInk">
               Evidence matrix and remediation backlog for {profile.companyName}. This is a
               readiness assessment, not legal advice.
             </p>
@@ -896,7 +1008,7 @@ function ResultsDashboard({
             <button
               type="button"
               onClick={onOpenReport}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slateLine bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
+              className={OUTLINE_BUTTON_CLASS}
             >
               <FileDown className="h-4 w-4" aria-hidden="true" />
               Export PDF
@@ -904,7 +1016,7 @@ function ResultsDashboard({
             <button
               type="button"
               onClick={onDownloadCsv}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slateLine bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
+              className={OUTLINE_BUTTON_CLASS}
             >
               <Download className="h-4 w-4" aria-hidden="true" />
               Download CSV
@@ -912,7 +1024,7 @@ function ResultsDashboard({
             <button
               type="button"
               onClick={onReset}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-ink"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               Start new assessment
@@ -935,16 +1047,19 @@ function ResultsDashboard({
         <div className="flex flex-col gap-2 border-b border-slateLine pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-xl font-semibold">Readiness matrix</h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-mutedInk">
               {documents.length} document(s) analyzed against the current source-backed requirement base.
             </p>
           </div>
+          <span className="rounded-full bg-primarySoft px-3 py-1 text-xs font-semibold text-regBlue">
+            Source-backed controls
+          </span>
         </div>
         <MatrixMobileCards matrix={result.matrix} onSelectItem={onSelectItem} />
-        <div className="mt-4 hidden overflow-x-auto md:block">
+        <div className="mt-4 hidden overflow-x-auto rounded-lg border border-slateLine md:block">
           <table className="w-full min-w-[1040px] border-separate border-spacing-0 text-left text-sm">
             <thead>
-              <tr className="text-xs uppercase tracking-[0.08em] text-slate-500">
+              <tr className="bg-surfaceMuted text-xs uppercase tracking-[0.08em] text-muted">
                 {[
                   "Domain",
                   "Requirement",
@@ -964,15 +1079,15 @@ function ResultsDashboard({
             </thead>
             <tbody>
               {result.matrix.map((item) => (
-                <tr key={item.requirementId} className="align-top">
-                  <td className="border-b border-slateLine px-3 py-4 font-semibold text-slate-800">
+                <tr key={item.requirementId} className="align-top transition hover:bg-surfaceMuted/45">
+                  <td className="border-b border-slateLine px-3 py-4 font-semibold text-ink">
                     {item.domain}
                   </td>
                   <td className="max-w-[240px] border-b border-slateLine px-3 py-4">
                     <p className="font-medium">{item.requirementTitle}</p>
-                    <p className="mt-1 text-xs text-slate-500">{item.requirementId}</p>
+                    <p className="mt-1 text-xs text-muted">{item.requirementId}</p>
                   </td>
-                  <td className="max-w-[220px] border-b border-slateLine px-3 py-4 text-xs leading-5 text-slate-500">
+                  <td className="max-w-[220px] border-b border-slateLine px-3 py-4 text-xs leading-5 text-muted">
                     <span className="line-clamp-3">
                       {item.regulatoryReference ?? "Source reference not supplied"}
                     </span>
@@ -980,10 +1095,10 @@ function ResultsDashboard({
                   <td className="border-b border-slateLine px-3 py-4">
                     <StatusBadge status={item.status} />
                   </td>
-                  <td className="max-w-[250px] border-b border-slateLine px-3 py-4 text-slate-600">
+                  <td className="max-w-[250px] border-b border-slateLine px-3 py-4 text-mutedInk">
                     <span className="line-clamp-3">{item.evidenceFound}</span>
                   </td>
-                  <td className="max-w-[240px] border-b border-slateLine px-3 py-4 text-slate-600">
+                  <td className="max-w-[240px] border-b border-slateLine px-3 py-4 text-mutedInk">
                     <span className="line-clamp-3">
                       {item.missingEvidence.length
                         ? item.missingEvidence.join("; ")
@@ -1002,7 +1117,7 @@ function ResultsDashboard({
                       onClick={() => onSelectItem(item)}
                       aria-label={`View evidence for ${item.requirementId}`}
                       title="View evidence"
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slateLine bg-white text-slate-700 transition hover:border-regBlue hover:text-regBlue"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slateLine bg-surface text-mutedInk transition hover:border-regBlue hover:text-regBlue"
                     >
                       <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                       <span className="sr-only">View evidence</span>
@@ -1019,17 +1134,17 @@ function ResultsDashboard({
         <div className="flex items-start justify-between gap-4 border-b border-slateLine pb-4">
           <div>
             <h2 className="text-xl font-semibold">Generated roadmap/backlog</h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-mutedInk">
               Prioritized product, compliance and engineering tasks from the evidence gaps.
             </p>
           </div>
-          <ClipboardList className="hidden h-6 w-6 text-slate-400 sm:block" aria-hidden="true" />
+          <ClipboardList className="hidden h-6 w-6 text-muted sm:block" aria-hidden="true" />
         </div>
         <RoadmapMobileCards roadmap={result.roadmap} />
-        <div className="mt-4 hidden overflow-x-auto md:block">
+        <div className="mt-4 hidden overflow-x-auto rounded-lg border border-slateLine md:block">
           <table className="w-full min-w-[920px] border-separate border-spacing-0 text-left text-sm">
             <thead>
-              <tr className="text-xs uppercase tracking-[0.08em] text-slate-500">
+              <tr className="bg-surfaceMuted text-xs uppercase tracking-[0.08em] text-muted">
                 {[
                   "Task",
                   "Owner",
@@ -1046,22 +1161,22 @@ function ResultsDashboard({
             </thead>
             <tbody>
               {result.roadmap.map((task) => (
-                <tr key={`${task.title}-${task.linkedRequirementIds.join("-")}`} className="align-top">
+                <tr key={`${task.title}-${task.linkedRequirementIds.join("-")}`} className="align-top transition hover:bg-surfaceMuted/45">
                   <td className="max-w-[260px] border-b border-slateLine px-3 py-4 font-semibold">
                     {task.title}
-                    <p className="mt-1 text-xs font-normal text-slate-500">
+                    <p className="mt-1 text-xs font-normal text-muted">
                       {task.linkedRequirementIds.join(", ")}
                     </p>
                   </td>
-                  <td className="border-b border-slateLine px-3 py-4 text-slate-600">{task.owner}</td>
+                  <td className="border-b border-slateLine px-3 py-4 text-mutedInk">{task.owner}</td>
                   <td className="border-b border-slateLine px-3 py-4">
                     <PriorityBadge priority={task.priority} />
                   </td>
                   <td className="border-b border-slateLine px-3 py-4 font-semibold">{task.deadline}</td>
-                  <td className="max-w-[240px] border-b border-slateLine px-3 py-4 text-slate-600">
+                  <td className="max-w-[240px] border-b border-slateLine px-3 py-4 text-mutedInk">
                     {task.evidenceRequired.join("; ")}
                   </td>
-                  <td className="max-w-[300px] border-b border-slateLine px-3 py-4 text-slate-600">
+                  <td className="max-w-[300px] border-b border-slateLine px-3 py-4 text-mutedInk">
                     {task.acceptanceCriteria}
                   </td>
                 </tr>
@@ -1084,14 +1199,14 @@ function EngineBanner({ result }: { result: AnalysisResult }) {
       : "Deterministic fallback";
   const persistenceTone =
     diagnostics.persistence.status === "saved"
-      ? "border-green-200 bg-green-50 text-green-900"
+      ? "border-green-200 bg-emerald-50 text-green-900"
       : diagnostics.persistence.status === "failed"
         ? "border-red-200 bg-red-50 text-red-900"
         : "border-amber-200 bg-amber-50 text-amber-900";
 
   return (
-    <div className="mt-5 grid gap-3 lg:grid-cols-[1fr_1fr]">
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">
+    <div className="mt-5 grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="rounded-lg border border-slateLine bg-primarySoft/65 p-4 text-sm text-primary">
         <div className="flex items-center gap-2 font-semibold">
           <BrainCircuit className="h-4 w-4" aria-hidden="true" />
           {engineLabel}
@@ -1101,7 +1216,12 @@ function EngineBanner({ result }: { result: AnalysisResult }) {
           Generated {new Date(diagnostics.generatedAt).toLocaleString()}.
         </p>
         {diagnostics.warnings.length ? (
-          <p className="mt-2 leading-6">{diagnostics.warnings.join(" ")}</p>
+          <details className="mt-3 rounded-lg border border-slateLine bg-surface/70 px-3 py-2">
+            <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.12em] text-regBlue">
+              Run notes ({diagnostics.warnings.length})
+            </summary>
+            <p className="mt-2 leading-6">{diagnostics.warnings.join(" ")}</p>
+          </details>
         ) : null}
       </div>
       <div className={`rounded-lg border p-4 text-sm ${persistenceTone}`}>
@@ -1123,31 +1243,34 @@ function EvidenceDrawer({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/30 no-print">
+    <div className="fixed inset-0 z-50 flex justify-end bg-primary/30 backdrop-blur-sm no-print">
       <button
         type="button"
         aria-label="Close evidence panel"
         className="hidden flex-1 sm:block"
         onClick={onClose}
       />
-      <aside className="h-full w-full max-w-xl overflow-y-auto bg-white p-5 shadow-2xl">
+      <aside className="h-full w-full max-w-xl overflow-y-auto border-l border-slateLine bg-surface p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-slateLine pb-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
               Evidence review
             </p>
-            <h2 className="mt-2 text-2xl font-semibold">{item.requirementTitle}</h2>
+            <h2 className="display-serif mt-2 text-3xl font-normal leading-tight">
+              {item.requirementTitle}
+            </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slateLine p-2 text-slate-600 transition hover:border-slate-300"
+            aria-label="Close evidence panel"
+            className="rounded-lg border border-slateLine p-2 text-mutedInk transition hover:border-muted"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="space-y-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
           <DetailRow label="Requirement ID" value={item.requirementId} />
           <DetailRow label="Status" value={<StatusBadge status={item.status} />} />
           <DetailRow label="Domain" value={item.domain} />
@@ -1193,21 +1316,21 @@ function MatrixMobileCards({
   return (
     <div className="mt-4 grid gap-3 md:hidden">
       {matrix.map((item) => (
-        <article key={item.requirementId} className="rounded-lg border border-slateLine p-4">
+        <article key={item.requirementId} className="rounded-lg border border-slateLine bg-surface p-4 shadow-sm">
           <div className="flex flex-wrap items-center gap-2">
             <StatusBadge status={item.status} />
             <PriorityBadge priority={item.priority} />
-            <span className="text-xs font-semibold text-slate-500">{item.requirementId}</span>
+            <span className="text-xs font-semibold text-muted">{item.requirementId}</span>
           </div>
-          <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+          <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
             {item.domain}
           </p>
           <h3 className="mt-1 text-lg font-semibold leading-6">{item.requirementTitle}</h3>
-          <p className="mt-2 text-xs leading-5 text-slate-500">
+          <p className="mt-2 text-xs leading-5 text-muted">
             {item.regulatoryReference ?? "Source reference not supplied"}
           </p>
-          <p className="mt-3 text-sm leading-6 text-slate-600">{item.evidenceFound}</p>
-          <p className="mt-3 text-sm leading-6 text-slate-700">
+          <p className="mt-3 text-sm leading-6 text-mutedInk">{item.evidenceFound}</p>
+          <p className="mt-3 text-sm leading-6 text-mutedInk">
             <span className="font-semibold">Missing: </span>
             {item.missingEvidence.length
               ? item.missingEvidence.join("; ")
@@ -1220,7 +1343,7 @@ function MatrixMobileCards({
             <button
               type="button"
               onClick={() => onSelectItem(item)}
-              className="inline-flex items-center gap-2 rounded-lg border border-slateLine bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-regBlue hover:text-regBlue"
+              className="inline-flex items-center gap-2 rounded-lg border border-slateLine bg-surface px-3 py-2 text-xs font-semibold text-mutedInk transition hover:border-regBlue hover:text-regBlue"
             >
               <Eye className="h-3.5 w-3.5" aria-hidden="true" />
               View evidence
@@ -1236,24 +1359,24 @@ function RoadmapMobileCards({ roadmap }: { roadmap: AnalysisResult["roadmap"] })
   return (
     <div className="mt-4 grid gap-3 md:hidden">
       {roadmap.map((task) => (
-        <article key={task.title} className="rounded-lg border border-slateLine p-4">
+        <article key={task.title} className="rounded-lg border border-slateLine bg-surface p-4 shadow-sm">
           <div className="flex flex-wrap items-center gap-2">
             <PriorityBadge priority={task.priority} />
-            <span className="rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600">
+            <span className="rounded-full bg-surfaceMuted px-2.5 py-1 text-xs font-semibold text-mutedInk">
               {task.deadline}
             </span>
           </div>
           <h3 className="mt-3 text-lg font-semibold leading-6">{task.title}</h3>
-          <p className="mt-1 text-sm font-semibold text-slate-500">{task.owner}</p>
-          <p className="mt-3 text-sm leading-6 text-slate-700">
+          <p className="mt-1 text-sm font-semibold text-muted">{task.owner}</p>
+          <p className="mt-3 text-sm leading-6 text-mutedInk">
             <span className="font-semibold">Evidence: </span>
             {task.evidenceRequired.join("; ")}
           </p>
-          <p className="mt-3 text-sm leading-6 text-slate-700">
+          <p className="mt-3 text-sm leading-6 text-mutedInk">
             <span className="font-semibold">Acceptance: </span>
             {task.acceptanceCriteria}
           </p>
-          <p className="mt-3 text-xs font-semibold text-slate-500">
+          <p className="mt-3 text-xs font-semibold text-muted">
             {task.linkedRequirementIds.join(", ")}
           </p>
         </article>
@@ -1276,18 +1399,20 @@ function ReportModal({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/40 p-4 print-shell">
-      <div className="mx-auto max-w-5xl rounded-xl border border-slateLine bg-white p-6 shadow-2xl print-card">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-primary/35 p-4 backdrop-blur-sm print-shell">
+      <div className="mx-auto max-w-5xl rounded-lg border border-slateLine bg-surface p-6 shadow-2xl print-card">
         <div className="no-print mb-5 flex flex-col gap-3 border-b border-slateLine pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-regBlue">Export PDF</p>
-            <h2 className="text-2xl font-semibold">Board-ready report preview</h2>
+            <h2 className="display-serif text-3xl font-normal leading-tight">
+              Board-ready report preview
+            </h2>
           </div>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-white"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white"
             >
               <FileDown className="h-4 w-4" aria-hidden="true" />
               Print / save as PDF
@@ -1295,20 +1420,22 @@ function ReportModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slateLine px-4 py-2.5 text-sm font-semibold text-slate-700"
+              className={OUTLINE_BUTTON_CLASS}
             >
               Close
             </button>
           </div>
         </div>
 
-        <article className="space-y-6 text-sm">
+        <article className="flex flex-col gap-6 text-sm">
           <section className="print-break">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
               {PRODUCT_CONFIG.name}
             </p>
-            <h1 className="mt-2 text-3xl font-semibold">PSD3/PSR readiness report</h1>
-            <p className="mt-2 text-slate-600">
+            <h1 className="display-serif mt-2 text-4xl font-normal leading-tight">
+              PSD3/PSR readiness report
+            </h1>
+            <p className="mt-2 text-mutedInk">
               {profile.companyName} - {profile.companyType} - {profile.country}
             </p>
             <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-900">
@@ -1353,16 +1480,16 @@ function ReportModal({
 
           <section className="print-break">
             <h2 className="text-xl font-semibold">Top gaps</h2>
-            <div className="mt-3 space-y-3">
+            <div className="mt-3 flex flex-col gap-3">
               {topGaps.map((gap) => (
                 <div key={gap.requirementId} className="rounded-lg border border-slateLine p-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge status={gap.status} />
                     <PriorityBadge priority={gap.priority} />
-                    <span className="text-xs font-semibold text-slate-500">{gap.requirementId}</span>
+                    <span className="text-xs font-semibold text-muted">{gap.requirementId}</span>
                   </div>
                   <p className="mt-2 font-semibold">{gap.requirementTitle}</p>
-                  <p className="mt-1 text-slate-600">{gap.missingEvidence.join("; ")}</p>
+                  <p className="mt-1 text-mutedInk">{gap.missingEvidence.join("; ")}</p>
                 </div>
               ))}
             </div>
@@ -1373,7 +1500,7 @@ function ReportModal({
             <div className="mt-3 overflow-x-auto">
               <table className="w-full min-w-[780px] border-separate border-spacing-0 text-left text-xs">
                 <thead>
-                  <tr className="text-slate-500">
+                  <tr className="text-muted">
                     <th className="border-b border-slateLine py-2 pr-3">Domain</th>
                     <th className="border-b border-slateLine py-2 pr-3">Requirement</th>
                     <th className="border-b border-slateLine py-2 pr-3">Reference</th>
@@ -1406,18 +1533,18 @@ function ReportModal({
 
           <section>
             <h2 className="text-xl font-semibold">Roadmap</h2>
-            <div className="mt-3 space-y-3">
+            <div className="mt-3 flex flex-col gap-3">
               {result.roadmap.map((task) => (
                 <div key={task.title} className="rounded-lg border border-slateLine p-4 print-break">
                   <div className="flex flex-wrap items-center gap-2">
                     <PriorityBadge priority={task.priority} />
-                    <span className="text-xs font-semibold text-slate-500">{task.deadline}</span>
+                    <span className="text-xs font-semibold text-muted">{task.deadline}</span>
                   </div>
                   <p className="mt-2 font-semibold">{task.title}</p>
-                  <p className="mt-1 text-slate-600">
+                  <p className="mt-1 text-mutedInk">
                     Owner: {task.owner}. Evidence: {task.evidenceRequired.join("; ")}.
                   </p>
-                  <p className="mt-1 text-slate-600">
+                  <p className="mt-1 text-mutedInk">
                     Acceptance criteria: {task.acceptanceCriteria}
                   </p>
                 </div>
@@ -1428,9 +1555,9 @@ function ReportModal({
           {result.diagnostics?.regulatorySources.length ? (
             <section className="print-break">
               <h2 className="text-xl font-semibold">Regulatory sources</h2>
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 flex flex-col gap-2">
                 {result.diagnostics.regulatorySources.map((source) => (
-                  <p key={source.url} className="text-slate-600">
+                  <p key={source.url} className="text-mutedInk">
                     {source.label}: {source.url}
                   </p>
                 ))}
@@ -1443,7 +1570,13 @@ function ReportModal({
   );
 }
 
-function WorkflowRail({ screen }: { screen: Screen }) {
+function WorkflowRail({
+  screen,
+  variant = "desktop"
+}: {
+  screen: Screen;
+  variant?: "desktop" | "mobile";
+}) {
   const steps = [
     ["scope", "Company scope"],
     ["documents", "Documents"],
@@ -1451,24 +1584,64 @@ function WorkflowRail({ screen }: { screen: Screen }) {
     ["results", "Results dashboard"]
   ] as const;
 
+  if (variant === "mobile") {
+    return (
+      <div className="rounded-lg border border-slateLine bg-surface p-2 shadow-sm">
+        <div className="grid grid-cols-4 gap-2">
+          {steps.map(([key, label], index) => {
+            const active = key === screen;
+            const shortLabel =
+              key === "scope"
+                ? "Scope"
+                : key === "documents"
+                  ? "Docs"
+                  : key === "processing"
+                    ? "Agent"
+                    : "Result";
+            return (
+              <div
+                key={key}
+                aria-label={label}
+                className={`flex min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-[11px] ${
+                  active
+                    ? "bg-primary text-white"
+                    : "bg-surfaceMuted text-mutedInk"
+                }`}
+              >
+                <span
+                  className={`flex size-5 items-center justify-center rounded-full text-[11px] font-semibold ${
+                    active ? "bg-surface/18 text-white" : "bg-surface text-mutedInk"
+                  }`}
+                >
+                  {index + 1}
+                </span>
+                <span className="truncate font-semibold">{shortLabel}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="sticky top-20 rounded-xl border border-slateLine bg-white p-4 shadow-sm">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+    <div className="sticky top-24 rounded-lg border border-slateLine bg-surface p-4 shadow-panel">
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
         Workflow
       </p>
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         {steps.map(([key, label], index) => {
           const active = key === screen;
           return (
             <div
               key={key}
               className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm ${
-                active ? "bg-blue-50 font-semibold text-regBlue" : "text-slate-600"
+                active ? "bg-primary font-semibold text-white" : "text-mutedInk hover:bg-surfaceMuted"
               }`}
             >
               <span
-                className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                  active ? "bg-regBlue text-white" : "bg-slate-100 text-slate-500"
+                className={`flex size-6 items-center justify-center rounded-full text-xs ${
+                  active ? "bg-surface/20 text-white" : "bg-surfaceMuted text-muted"
                 }`}
               >
                 {index + 1}
@@ -1482,9 +1655,15 @@ function WorkflowRail({ screen }: { screen: Screen }) {
   );
 }
 
-function Panel({ children }: { children: React.ReactNode }) {
+function Panel({
+  children,
+  className = ""
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="rounded-xl border border-slateLine bg-white p-5 shadow-sm sm:p-6">
+    <div className={`rounded-lg border border-slateLine bg-surface p-5 shadow-panel sm:p-6 ${className}`}>
       {children}
     </div>
   );
@@ -1500,15 +1679,15 @@ function MetricCard({
   tone: "blue" | "green" | "amber" | "red" | "gray";
 }) {
   const toneClasses = {
-    blue: "border-blue-100 bg-blue-50 text-regBlue",
-    green: "border-green-100 bg-green-50 text-regGreen",
-    amber: "border-amber-100 bg-amber-50 text-regAmber",
-    red: "border-red-100 bg-red-50 text-regRed",
-    gray: "border-slate-200 bg-slate-50 text-slate-600"
+    blue: "border-blue-200 bg-blue-50 text-regBlue",
+    green: "border-green-200 bg-emerald-50 text-regGreen",
+    amber: "border-amber-200 bg-amber-50 text-regAmber",
+    red: "border-red-200 bg-red-50 text-regRed",
+    gray: "border-slateLine bg-surfaceMuted text-mutedInk"
   };
 
   return (
-    <div className={`rounded-lg border p-4 ${toneClasses[tone]}`}>
+    <div className={`rounded-lg border p-4 shadow-sm ${toneClasses[tone]}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.12em] opacity-80">{label}</p>
       <p className="mt-2 text-3xl font-semibold text-ink">{value}</p>
     </div>
@@ -1517,8 +1696,8 @@ function MetricCard({
 
 function ProofPoint({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-slateLine bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">{label}</p>
+    <div className="rounded-lg border border-slateLine bg-surface p-4 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">{label}</p>
       <p className="mt-2 font-semibold text-ink">{value}</p>
     </div>
   );
@@ -1534,19 +1713,19 @@ function FeatureCard({
   text: string;
 }) {
   return (
-    <div className="rounded-xl border border-slateLine bg-white p-5 shadow-sm">
-      <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 text-regBlue">
+    <div className="rounded-lg border border-slateLine bg-surface p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-panel">
+      <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-primarySoft text-regBlue">
         {icon}
       </div>
       <h3 className="font-semibold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+      <p className="mt-2 text-sm leading-6 text-mutedInk">{text}</p>
     </div>
   );
 }
 
 function StatusBadge({ status }: { status: RequirementStatus }) {
   const classes = {
-    Covered: "bg-green-50 text-regGreen border-green-200",
+    Covered: "bg-emerald-50 text-regGreen border-green-200",
     "Partially covered": "bg-amber-50 text-regAmber border-amber-200",
     "Not evidenced": "bg-red-50 text-regRed border-red-200",
     "Needs human review": "bg-blue-50 text-regBlue border-blue-200"
@@ -1563,7 +1742,7 @@ function StatusBadge({ status }: { status: RequirementStatus }) {
 
 function PriorityBadge({ priority }: { priority: Priority }) {
   const classes = {
-    Low: "bg-slate-50 text-slate-600 border-slate-200",
+    Low: "bg-surfaceMuted text-mutedInk border-slateLine",
     Medium: "bg-blue-50 text-regBlue border-blue-200",
     High: "bg-amber-50 text-regAmber border-amber-200",
     Critical: "bg-red-50 text-regRed border-red-200"
@@ -1587,10 +1766,10 @@ function DetailRow({
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
         {label}
       </p>
-      <div className="mt-1 text-sm leading-6 text-slate-800">{value}</div>
+      <div className="mt-1 text-sm leading-6 text-ink">{value}</div>
     </div>
   );
 }
