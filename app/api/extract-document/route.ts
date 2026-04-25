@@ -1,4 +1,3 @@
-import { PDFParse } from "pdf-parse";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import type { UploadedDocument } from "@/lib/types";
@@ -75,6 +74,7 @@ function getExtension(name: string): string {
 }
 
 async function extractPdfText(file: File): Promise<string> {
+  const { PDFParse } = await import("pdf-parse");
   const data = new Uint8Array(await file.arrayBuffer());
   PDFParse.setWorker(
     pathToFileURL(
