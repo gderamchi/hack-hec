@@ -182,8 +182,9 @@ function gateRequirement({
       hit: findEvidence(documents, expandEvidencePhrases(expectedEvidence))
     }))
     .filter((item): item is ExpectedEvidenceHit => Boolean(item.hit));
+  const primaryHit = bestHit ? selectPrimaryHit(expectedHits, bestHit) : undefined;
   const strongestEvidence = Math.max(
-    bestHit?.strength ?? 0,
+    primaryHit?.strength ?? 0,
     ...expectedHits.map((item) => item.hit.strength)
   );
   const status = inferGatedStatus({
@@ -213,9 +214,9 @@ function gateRequirement({
     regulatoryReference: `${requirement.sourceInstrument}: ${requirement.sourceReference}`,
     sourceUrl: requirement.sourceUrl,
     status,
-    evidenceFound: describeEvidence(status, bestHit),
-    sourceDocument: status === "Not evidenced" ? undefined : bestHit?.sourceDocument,
-    evidenceExcerpt: status === "Not evidenced" ? undefined : bestHit?.excerpt,
+    evidenceFound: describeEvidence(status, primaryHit),
+    sourceDocument: status === "Not evidenced" ? undefined : primaryHit?.sourceDocument,
+    evidenceExcerpt: status === "Not evidenced" ? undefined : primaryHit?.excerpt,
     missingEvidence,
     priority: requirement.priority,
     confidence,
@@ -252,6 +253,19 @@ function inferGatedStatus({
     );
 
   return canBeCovered ? "Covered" : "Partially covered";
+}
+
+function selectPrimaryHit(
+  expectedHits: ExpectedEvidenceHit[],
+  bestHit: EvidenceHit | undefined
+): EvidenceHit | undefined {
+  const expectedEvidenceHits = expectedHits.map((item) => item.hit);
+
+  if (expectedEvidenceHits.length > 0) {
+    return expectedEvidenceHits.sort(compareEvidenceHits)[0];
+  }
+
+  return bestHit;
 }
 
 function inferMissingEvidence({
