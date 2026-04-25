@@ -156,6 +156,120 @@ const RULES: Record<string, KeywordRule> = {
     strongKeywords: ["retention policy", "audit log schema", "export workflow"],
     task: "Define audit retention and review workflow for payment decisions",
     owner: "Engineering + Compliance"
+  },
+  "PSR-LIMIT-001": {
+    keywords: ["spending limit", "payment limit", "blocking measure", "block payment", "freeze card"],
+    strongKeywords: ["customer limit", "fraud block", "instrument blocking", "limit configuration"],
+    task: "Add customer spending limits and payment blocking controls",
+    owner: "Product + Fraud"
+  },
+  "PSR-SUSPICIOUS-001": {
+    keywords: ["suspicious transaction", "freeze transaction", "incoming transaction hold", "receiving psp"],
+    strongKeywords: ["freeze workflow", "release approval", "incoming hold", "suspicious incoming"],
+    task: "Define receiving-PSP suspicious transaction freeze workflow",
+    owner: "Fraud Operations"
+  },
+  "PSR-IMPERSONATION-001": {
+    keywords: ["impersonation fraud", "psp employee", "spoofing", "police report", "social engineering"],
+    strongKeywords: ["full refund", "police report", "psp notification", "impersonation reimbursement"],
+    task: "Implement PSP impersonation fraud refund process",
+    owner: "Compliance + Fraud"
+  },
+  "PSR-UNAUTH-001": {
+    keywords: ["unauthorised transaction", "unauthorized transaction", "altered transaction", "fraudster initiated"],
+    strongKeywords: ["full fraudulent amount", "fraudster changed", "fraudster initiated", "unauthorised classification"],
+    task: "Classify fraudster-initiated or altered transactions as unauthorised",
+    owner: "Compliance + Support"
+  },
+  "PSR-HUMAN-001": {
+    keywords: ["human support", "support agent", "phone support", "manual support", "chatbot handoff"],
+    strongKeywords: ["not only chatbot", "human escalation", "live agent", "support hours"],
+    task: "Add human support access and chatbot handoff evidence",
+    owner: "Customer Support"
+  },
+  "PSR-ADR-001": {
+    keywords: ["alternative dispute resolution", "adr", "ombudsman", "consumer dispute"],
+    strongKeywords: ["adr procedure", "dispute body", "consumer chooses", "case handoff"],
+    task: "Document alternative dispute resolution participation",
+    owner: "Legal + Compliance"
+  },
+  "PSR-FEE-001": {
+    keywords: ["fee disclosure", "currency conversion", "charges", "fixed fee", "exchange rate"],
+    strongKeywords: ["before initiation", "pre-payment", "pre initiation", "charge calculation"],
+    task: "Evidence pre-initiation fee and FX disclosures",
+    owner: "Product + Compliance"
+  },
+  "PSR-CASH-002": {
+    keywords: ["retail cash withdrawal", "cash without purchase", "cash withdrawal without purchase"],
+    strongKeywords: ["minimum withdrawal", "maximum withdrawal", "no purchase", "retail store withdrawal"],
+    task: "Define retail cash withdrawal without-purchase flow",
+    owner: "Product Operations"
+  },
+  "PSR-ATM-001": {
+    keywords: ["atm fee", "atm exchange rate", "cash withdrawal fee", "cash disclosure"],
+    strongKeywords: ["before withdrawal", "fee pre-disclosure", "exchange-rate display", "atm receipt"],
+    task: "Display ATM fees and exchange rates before withdrawal",
+    owner: "Product + Compliance"
+  },
+  "PSR-OB-004": {
+    keywords: ["prohibited obstacle", "open banking obstacle", "third-party provider access", "non-discrimination"],
+    strongKeywords: ["obstacle assessment", "access denial", "aspsp interface", "data access test"],
+    task: "Remove prohibited obstacles to open banking data access",
+    owner: "Platform Engineering"
+  },
+  "PSD3-ACCOUNT-001": {
+    keywords: ["payment account access", "non-discriminatory account", "payment institution account", "refusal criteria"],
+    strongKeywords: ["objective onboarding", "account access sla", "non-discriminatory basis", "restriction audit"],
+    task: "Document non-discriminatory account access for payment institutions",
+    owner: "Banking Operations"
+  },
+  "PSR-MOBILE-001": {
+    keywords: ["frand", "mobile device", "front-end service provider", "payment data storage", "electronic service"],
+    strongKeywords: ["fair reasonable and non-discriminatory", "vendor restriction", "front-end access"],
+    task: "Evidence FRAND access for mobile payment front ends",
+    owner: "Product + Legal"
+  },
+  "PSD3-AUTH-001": {
+    keywords: ["authorisation application", "authorization application", "own-funds", "initial capital", "budget forecast"],
+    strongKeywords: ["prudential", "capital requirement", "business plan", "service-by-service risk"],
+    task: "Complete PSD3 authorisation and prudential evidence pack",
+    owner: "Compliance Leadership"
+  },
+  "PSD3-TRANSITION-001": {
+    keywords: ["transition", "re-authorisation", "reauthorisation", "existing licence", "existing license"],
+    strongKeywords: ["transitional deadline", "licence inventory", "application timeline", "gap assessment"],
+    task: "Plan PSD3 re-authorisation for existing licensed activities",
+    owner: "Legal + Compliance"
+  },
+  "PSD3-PASSPORT-001": {
+    keywords: ["passporting", "freedom to provide services", "right of establishment", "branch", "agent register"],
+    strongKeywords: ["host member state", "competent authority", "services notification", "branch register"],
+    task: "Maintain passporting and cross-border services evidence",
+    owner: "Compliance Operations"
+  },
+  "PSR-PLATFORM-001": {
+    keywords: ["fraudulent content", "online platform", "takedown", "digital services act", "platform liability"],
+    strongKeywords: ["platform notification", "remove fraudulent content", "recovery workflow", "dsa escalation"],
+    task: "Create platform fraud-content notification and recovery workflow",
+    owner: "Fraud + Legal"
+  },
+  "PSR-ADS-001": {
+    keywords: ["financial services advertising", "advertiser authorisation", "advertiser authorization", "platform submission"],
+    strongKeywords: ["legal authorisation", "country approval", "marketing legal review", "exemption evidence"],
+    task: "Evidence authorisation for financial services advertising",
+    owner: "Marketing + Legal"
+  },
+  "PSR-EDU-001": {
+    keywords: ["fraud education", "awareness", "scam guidance", "avoid fraud", "customer education"],
+    strongKeywords: ["impersonation scam", "campaign", "in-product awareness", "effectiveness"],
+    task: "Launch and evidence customer fraud education measures",
+    owner: "Fraud + Customer Support"
+  },
+  "PSR-FRAUD-REPORT-001": {
+    keywords: ["fraud reporting", "fraud statistics", "fraud data", "payment instrument taxonomy"],
+    strongKeywords: ["semi-annual reporting", "competent authority", "fraud trend", "reporting workflow"],
+    task: "Build fraud data reporting and trend review evidence",
+    owner: "Fraud Data + Compliance"
   }
 };
 

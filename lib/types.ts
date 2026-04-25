@@ -4,7 +4,13 @@ export const COMPANY_TYPES = [
   "Wallet",
   "Neobank",
   "Open Banking Provider",
-  "Payment Orchestrator"
+  "Payment Orchestrator",
+  "Technical Service Provider",
+  "Online Platform",
+  "Electronic Communications Provider",
+  "Crypto-asset Service Provider",
+  "Retail Cash Provider",
+  "Independent ATM Deployer"
 ] as const;
 
 export const COUNTRIES = [
@@ -27,7 +33,11 @@ export const SERVICES = [
   "Multi-currency transfers",
   "Cash withdrawal support",
   "Fraud monitoring",
-  "Strong customer authentication"
+  "Strong customer authentication",
+  "Payment account provision to payment institutions",
+  "Mobile wallet front-end services",
+  "Financial services advertising",
+  "Online platform fraud-content handling"
 ] as const;
 
 export const STATUSES = [
@@ -68,7 +78,13 @@ export type Requirement = {
   priority: Priority;
   relevantFor: string[];
   serviceTriggers?: ServiceFlow[];
-  sourceInstrument: "PSD3 proposal" | "PSR proposal" | "Instant Payments Regulation";
+  sourceInstrument:
+    | "PSD3 proposal"
+    | "PSR proposal"
+    | "PSD3/PSR provisional agreement"
+    | "Instant Payments Regulation"
+    | "EBA fraud opinion"
+    | "EBA-ECB fraud report";
   sourceReference: string;
   sourceUrl: string;
 };
@@ -136,22 +152,11 @@ export type AnalysisDiagnostics = {
   }>;
 };
 
-export const DEFAULT_COMPANY_PROFILE: CompanyProfile = {
-  companyName: "EuroFlow Payments Group",
+export const EMPTY_COMPANY_PROFILE: CompanyProfile = {
+  companyName: "",
   companyType: "Payment Institution",
-  country: "Other EU",
-  services: [
-    "Wallet transfers",
-    "Instant credit transfers",
-    "Card payments",
-    "Open banking account access",
-    "Payment initiation",
-    "Merchant acquiring",
-    "Electronic money issuance",
-    "Multi-currency transfers",
-    "Fraud monitoring",
-    "Strong customer authentication"
-  ]
+  country: "France",
+  services: []
 };
 
 export const DISCLAIMER =

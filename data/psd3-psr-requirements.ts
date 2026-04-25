@@ -5,6 +5,16 @@ const PSD3_URL =
   "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A52023PC0366";
 const INSTANT_PAYMENTS_URL =
   "https://finance.ec.europa.eu/consumer-finance-and-payments/payment-services/payment-services_en";
+const EP_AGREEMENT_URL =
+  "https://www.europarl.europa.eu/news/en/press-room/20251121IPR31540/";
+const EP_PSR_TRAIN_URL =
+  "https://www.europarl.europa.eu/legislative-train/theme-an-economy-that-works-for-people/file-revision-of-eu-rules-on-payment-services";
+const EP_PSD3_TRAIN_URL =
+  "https://www.europarl.europa.eu/legislative-train/theme-economic-and-monetary-affairs-econ/file-payment-services-and-electronic-money-services-%28directive%29";
+const EBA_FRAUD_OPINION_URL =
+  "https://www.eba.europa.eu/publications-and-media/press-releases/eba-has-identified-new-types-payment-fraud-and-proposes-measures-mitigate-underlying-risks-and";
+const EBA_ECB_FRAUD_REPORT_URL =
+  "https://www.eba.europa.eu/publications-and-media/press-releases/joint-eba-ecb-report-payment-fraud-strong-authentication-remains-effective-fraudsters-are-adapting";
 
 export const PSD3_PSR_REQUIREMENTS: Requirement[] = [
   {
@@ -465,5 +475,557 @@ export const PSD3_PSR_REQUIREMENTS: Requirement[] = [
     sourceInstrument: "PSR proposal",
     sourceReference: "Rights, obligations, liability, consent and fraud evidence requirements",
     sourceUrl: PSR_URL
+  },
+  {
+    id: "PSR-LIMIT-001",
+    domain: "Fraud Prevention / User Controls",
+    title: "Offer spending limits and payment blocking measures",
+    summary:
+      "Payment service providers should evidence customer-facing spending limits and blocking controls that reduce payment fraud risk.",
+    expectedEvidence: [
+      "spending-limit configuration flow",
+      "payment instrument or account blocking control",
+      "risk-based trigger logic for limits and blocks",
+      "audit evidence for customer changes and fraud blocks"
+    ],
+    impactAreas: ["Product", "Fraud", "Engineering", "Customer Support"],
+    priority: "High",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Wallet", "Neobank"],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Payment initiation",
+      "Multi-currency transfers",
+      "Fraud monitoring"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; PSPs must offer spending limits and blocking measures",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-SUSPICIOUS-001",
+    domain: "Fraud Prevention / Receiving PSP",
+    title: "Freeze suspicious received transactions",
+    summary:
+      "Receiving PSPs should detect suspicious incoming transactions and freeze them where required by the fraud prevention framework.",
+    expectedEvidence: [
+      "incoming transaction suspicious-activity rules",
+      "freeze or hold workflow for receiving PSP operations",
+      "release/escalation approval procedure",
+      "customer and counterparty communication templates"
+    ],
+    impactAreas: ["Fraud", "Operations", "Engineering", "Compliance"],
+    priority: "Critical",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Wallet", "Neobank"],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Payment initiation",
+      "Multi-currency transfers",
+      "Fraud monitoring"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; receiving PSP must freeze suspicious transactions",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-IMPERSONATION-001",
+    domain: "Impersonation Fraud / Reimbursement",
+    title: "Refund qualifying PSP impersonation fraud cases",
+    summary:
+      "Providers should define evidence, police-report, notification and reimbursement handling for cases where fraudsters impersonate PSP staff.",
+    expectedEvidence: [
+      "PSP impersonation fraud intake procedure",
+      "police report and PSP notification evidence checklist",
+      "full refund decision workflow",
+      "customer outcome template and audit trail"
+    ],
+    impactAreas: ["Fraud", "Customer Support", "Compliance", "Legal"],
+    priority: "Critical",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Wallet", "Neobank"],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Payment initiation",
+      "Multi-currency transfers",
+      "Fraud monitoring"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; PSP impersonation fraud full refund where conditions are met",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-UNAUTH-001",
+    domain: "Unauthorised Transactions",
+    title: "Treat fraudster-initiated or altered transactions as unauthorised",
+    summary:
+      "Providers should handle cases where a fraudster initiates or changes a transaction as unauthorised transactions with full loss coverage where applicable.",
+    expectedEvidence: [
+      "fraudster-initiated transaction classification rules",
+      "altered transaction investigation workflow",
+      "full amount reimbursement decision criteria",
+      "case evidence and customer notification templates"
+    ],
+    impactAreas: ["Fraud", "Customer Support", "Compliance", "Legal"],
+    priority: "Critical",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Wallet", "Neobank"],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Payment initiation",
+      "Multi-currency transfers",
+      "Fraud monitoring"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; fraudster-initiated or changed transactions treated as unauthorised",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-HUMAN-001",
+    domain: "Customer Support",
+    title: "Provide human customer support for payment users",
+    summary:
+      "Payment service users should have access to human customer support and not be limited to chatbot-only support paths.",
+    expectedEvidence: [
+      "human support access channel",
+      "support hours and escalation rules",
+      "chatbot handoff procedure",
+      "support accessibility and audit evidence"
+    ],
+    impactAreas: ["Customer Support", "Product", "Compliance"],
+    priority: "High",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Open Banking Provider",
+      "Payment Orchestrator"
+    ],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Open banking account access",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Electronic money issuance",
+      "Multi-currency transfers",
+      "Cash withdrawal support"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; users must have access to human customer support",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-ADR-001",
+    domain: "Dispute Resolution",
+    title: "Participate in alternative dispute resolution when chosen by consumers",
+    summary:
+      "Providers should evidence participation in alternative dispute resolution procedures when a consumer chooses that path.",
+    expectedEvidence: [
+      "ADR procedure and competent body mapping",
+      "consumer election and consent capture",
+      "case handoff workflow",
+      "outcome recording and customer communication templates"
+    ],
+    impactAreas: ["Compliance", "Customer Support", "Legal", "Operations"],
+    priority: "High",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Open Banking Provider",
+      "Payment Orchestrator"
+    ],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Open banking account access",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Electronic money issuance",
+      "Multi-currency transfers",
+      "Cash withdrawal support"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; all PSPs participate in ADR procedures if the consumer chooses it",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-FEE-001",
+    domain: "Customer Transparency",
+    title: "Disclose all charges before payment initiation",
+    summary:
+      "Customers should receive pre-initiation information on all payment charges, including currency conversion and fixed fees.",
+    expectedEvidence: [
+      "pre-payment fee disclosure screen",
+      "currency conversion charge calculation",
+      "fixed fee disclosure by channel",
+      "receipt and audit evidence of displayed charges"
+    ],
+    impactAreas: ["Product", "Compliance", "Customer Support"],
+    priority: "High",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Open Banking Provider",
+      "Payment Orchestrator"
+    ],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Multi-currency transfers",
+      "Cash withdrawal support"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; customers informed about all charges before payment initiation",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-CASH-002",
+    domain: "Access to Cash",
+    title: "Support retail cash withdrawals without purchase where offered",
+    summary:
+      "Retail cash withdrawal services should evidence no-purchase withdrawal conditions, limits, disclosures and operational handling.",
+    expectedEvidence: [
+      "retail cash withdrawal flow without purchase",
+      "minimum and maximum withdrawal rule handling",
+      "merchant or retailer operational procedure",
+      "customer fee and failure disclosure"
+    ],
+    impactAreas: ["Product", "Operations", "Compliance"],
+    priority: "Medium",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Retail Cash Provider"
+    ],
+    serviceTriggers: ["Cash withdrawal support"],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSD3 text summary; retail cash withdrawals without purchase to improve cash access",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-ATM-001",
+    domain: "Access to Cash / Transparency",
+    title: "Display ATM fees and exchange rates before withdrawal",
+    summary:
+      "ATM and cash withdrawal journeys should display all fees and exchange rates before the transaction is confirmed.",
+    expectedEvidence: [
+      "ATM fee pre-disclosure screen",
+      "exchange-rate display logic",
+      "customer acknowledgement or cancellation path",
+      "cash withdrawal receipt evidence"
+    ],
+    impactAreas: ["Product", "Compliance", "Operations"],
+    priority: "Medium",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Independent ATM Deployer"
+    ],
+    serviceTriggers: ["Cash withdrawal support", "Multi-currency transfers"],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Council mandate summary; ATM transactions show fees and exchange rates before execution",
+    sourceUrl: EP_PSR_TRAIN_URL
+  },
+  {
+    id: "PSR-OB-004",
+    domain: "Open Banking Data Access",
+    title: "Remove prohibited obstacles to open banking data access",
+    summary:
+      "Account-servicing providers should evidence that authorised open banking providers can access payment account data without discriminatory obstacles.",
+    expectedEvidence: [
+      "open banking obstacle assessment",
+      "third-party provider access test evidence",
+      "non-discrimination controls for ASPSP interfaces",
+      "incident and denial reason logs"
+    ],
+    impactAreas: ["Platform", "Engineering", "Compliance", "Open Banking"],
+    priority: "High",
+    relevantFor: [
+      "Open Banking Provider",
+      "Neobank",
+      "Electronic Money Institution",
+      "Payment Institution"
+    ],
+    serviceTriggers: ["Open banking account access", "Payment initiation"],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed text summary; prohibited obstacles to authorised open banking data access",
+    sourceUrl: EP_PSD3_TRAIN_URL
+  },
+  {
+    id: "PSD3-ACCOUNT-001",
+    domain: "Access to Payment Accounts",
+    title: "Provide payment institutions with non-discriminatory payment account access",
+    summary:
+      "Banks and account providers should evidence non-discriminatory access to payment accounts for payment institutions.",
+    expectedEvidence: [
+      "payment institution account access policy",
+      "objective onboarding and refusal criteria",
+      "account access SLA and escalation process",
+      "refusal or restriction audit trail"
+    ],
+    impactAreas: ["Compliance", "Banking Operations", "Legal", "Partnerships"],
+    priority: "High",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Neobank"],
+    serviceTriggers: ["Payment account provision to payment institutions"],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSD3 text summary; banks provide payment institutions with account access on a non-discriminatory basis",
+    sourceUrl: EP_PSD3_TRAIN_URL
+  },
+  {
+    id: "PSR-MOBILE-001",
+    domain: "Mobile / Front-End Access",
+    title: "Ensure FRAND access to mobile device and electronic service capabilities",
+    summary:
+      "Front-end service providers should evidence fair, reasonable and non-discriminatory access to store and transfer payment data where mobile or electronic service capabilities are needed.",
+    expectedEvidence: [
+      "mobile device or electronic service dependency map",
+      "FRAND access assessment",
+      "front-end payment data storage and transfer controls",
+      "vendor restriction escalation evidence"
+    ],
+    impactAreas: ["Product", "Engineering", "Legal", "Partnerships"],
+    priority: "Medium",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Technical Service Provider"
+    ],
+    serviceTriggers: [
+      "Mobile wallet front-end services",
+      "Wallet transfers",
+      "Card payments",
+      "Payment initiation"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed text summary; device and electronic service providers allow front-end payment data storage and transfer on FRAND terms",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSD3-AUTH-001",
+    domain: "Authorisation / Prudential Requirements",
+    title: "Maintain PSD3 authorisation and prudential application evidence",
+    summary:
+      "Payment institutions should evidence authorisation, capital, own-funds calculations, budget forecasts and timelines aligned to the services provided.",
+    expectedEvidence: [
+      "authorisation application pack",
+      "initial capital and own-funds calculation",
+      "budget forecast and business plan",
+      "service-by-service risk and control mapping"
+    ],
+    impactAreas: ["Compliance", "Finance", "Leadership", "Legal"],
+    priority: "High",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Open Banking Provider",
+      "Neobank",
+      "Crypto-asset Service Provider"
+    ],
+    serviceTriggers: [
+      "Electronic money issuance",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Open banking account access"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSD3 text summary; authorisation subject to prudential and capital requirements, own-funds calculations, budget forecasts and harmonised timelines",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSD3-TRANSITION-001",
+    domain: "Licensing / Transitional Measures",
+    title: "Plan re-authorisation for existing PSD2 and e-money activities",
+    summary:
+      "Existing payment and e-money institutions should track transitional deadlines and evidence timely application under the new PSD3 framework.",
+    expectedEvidence: [
+      "existing licence inventory",
+      "PSD3 re-authorisation timeline",
+      "gap assessment against new application requirements",
+      "board or compliance approval record"
+    ],
+    impactAreas: ["Compliance", "Legal", "Leadership"],
+    priority: "High",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Open Banking Provider",
+      "Neobank"
+    ],
+    serviceTriggers: [
+      "Electronic money issuance",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Open banking account access"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSD3 text summary; existing licences remain valid only through transitional measures and timely application",
+    sourceUrl: EP_PSD3_TRAIN_URL
+  },
+  {
+    id: "PSD3-PASSPORT-001",
+    domain: "Cross-Border Services",
+    title: "Evidence right-of-establishment and freedom-to-provide-services notifications",
+    summary:
+      "Providers operating across Member States should maintain passporting, branch, agent and freedom-to-provide-services evidence.",
+    expectedEvidence: [
+      "host Member State services inventory",
+      "right of establishment or freedom to provide services notification",
+      "branch or agent register evidence",
+      "competent-authority correspondence"
+    ],
+    impactAreas: ["Compliance", "Legal", "Operations"],
+    priority: "Medium",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Open Banking Provider",
+      "Neobank",
+      "Payment Orchestrator"
+    ],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Open banking account access",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Electronic money issuance",
+      "Multi-currency transfers"
+    ],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "PSD3 negotiation scope; application to exercise right of establishment and freedom to provide services",
+    sourceUrl: EP_PSD3_TRAIN_URL
+  },
+  {
+    id: "PSR-PLATFORM-001",
+    domain: "Online Platform Fraud",
+    title: "Escalate fraudulent content to online platforms and recover platform-liability evidence",
+    summary:
+      "Where fraudulent payment content originates on online platforms, providers should evidence notification, takedown follow-up and reimbursement recovery records.",
+    expectedEvidence: [
+      "fraudulent content notification procedure",
+      "platform takedown evidence",
+      "customer reimbursement and platform recovery workflow",
+      "DSA-linked escalation records"
+    ],
+    impactAreas: ["Fraud", "Legal", "Operations", "Customer Support"],
+    priority: "Medium",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Wallet", "Neobank", "Online Platform"],
+    serviceTriggers: ["Fraud monitoring", "Online platform fraud-content handling"],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; online platforms liable to PSPs if informed fraudulent content is not removed",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-ADS-001",
+    domain: "Financial Services Advertising",
+    title: "Verify authorisation evidence for financial services advertising",
+    summary:
+      "Financial services advertisers should evidence legal authorisation or exemption when advertising through very large online platforms or search engines.",
+    expectedEvidence: [
+      "advertiser authorisation or exemption evidence",
+      "country-by-country advertising approval record",
+      "platform submission proof",
+      "marketing and legal review workflow"
+    ],
+    impactAreas: ["Marketing", "Legal", "Compliance"],
+    priority: "Medium",
+    relevantFor: ["Payment Institution", "Electronic Money Institution", "Wallet", "Neobank", "Online Platform"],
+    serviceTriggers: ["Financial services advertising"],
+    sourceInstrument: "PSD3/PSR provisional agreement",
+    sourceReference: "Agreed PSR text summary; financial services advertisers prove legal authorisation or exemption to very large online platforms and search engines",
+    sourceUrl: EP_AGREEMENT_URL
+  },
+  {
+    id: "PSR-EDU-001",
+    domain: "Fraud Education",
+    title: "Provide fraud education and awareness content",
+    summary:
+      "Providers should evidence customer education and awareness measures that help users avoid payment fraud and impersonation scams.",
+    expectedEvidence: [
+      "fraud education content",
+      "customer campaign or in-product awareness flow",
+      "impersonation scam guidance",
+      "content review and effectiveness evidence"
+    ],
+    impactAreas: ["Fraud", "Customer Support", "Product", "Compliance"],
+    priority: "Medium",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Open Banking Provider",
+      "Payment Orchestrator"
+    ],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Open banking account access",
+      "Payment initiation",
+      "Multi-currency transfers",
+      "Fraud monitoring"
+    ],
+    sourceInstrument: "EBA fraud opinion",
+    sourceReference: "EBA opinion and agreed PSR text summary; social engineering fraud requires additional mitigants and user education",
+    sourceUrl: EBA_FRAUD_OPINION_URL
+  },
+  {
+    id: "PSR-FRAUD-REPORT-001",
+    domain: "Fraud Reporting",
+    title: "Report fraud data and monitor fraud trends by payment instrument",
+    summary:
+      "Providers should retain fraud statistics and reporting evidence by payment instrument to support competent authority reporting and supervisory monitoring.",
+    expectedEvidence: [
+      "fraud reporting data model",
+      "payment instrument fraud taxonomy",
+      "semi-annual reporting workflow",
+      "management review of fraud trends and mitigants"
+    ],
+    impactAreas: ["Fraud", "Data", "Compliance", "Operations"],
+    priority: "High",
+    relevantFor: [
+      "Payment Institution",
+      "Electronic Money Institution",
+      "Wallet",
+      "Neobank",
+      "Open Banking Provider",
+      "Payment Orchestrator"
+    ],
+    serviceTriggers: [
+      "Instant credit transfers",
+      "Wallet transfers",
+      "Card payments",
+      "Open banking account access",
+      "Payment initiation",
+      "Merchant acquiring",
+      "Electronic money issuance",
+      "Multi-currency transfers",
+      "Fraud monitoring"
+    ],
+    sourceInstrument: "EBA-ECB fraud report",
+    sourceReference: "EBA-ECB fraud report; PSP fraud data reporting supports supervisory monitoring under PSD2 and related reporting frameworks",
+    sourceUrl: EBA_ECB_FRAUD_REPORT_URL
   }
 ];

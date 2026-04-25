@@ -1,3 +1,4 @@
+import { evaluateRequiredDocuments } from "@/data/document-requirements";
 import { analyzeWithOpenAI } from "@/lib/ai-analyzer";
 import { REGULATORY_SOURCE_SUMMARY } from "@/lib/app-config";
 import { runFallbackAnalysis } from "@/lib/fallback-analyzer";
@@ -14,6 +15,26 @@ export async function POST(request: Request) {
       {
         error: "Invalid analysis request",
         details: parsed.error.flatten()
+      },
+      { status: 400 }
+    );
+  }
+
+  const documentCheck = evaluateRequiredDocuments(
+    parsed.data.companyProfile,
+    parsed.data.documents
+  );
+
+  if (documentCheck.missing.length > 0) {
+    return Response.json(
+      {
+        error: "Missing required documents for selected services",
+        missingRequiredDocuments: documentCheck.missing.map((document) => ({
+          id: document.id,
+          title: document.title,
+          description: document.description,
+          requirementIds: document.requirementIds
+        }))
       },
       { status: 400 }
     );

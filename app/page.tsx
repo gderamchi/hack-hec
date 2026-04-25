@@ -22,12 +22,16 @@ import {
   X
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import {
+  evaluateRequiredDocuments,
+  type RequiredDocumentStatus
+} from "@/data/document-requirements";
 import { PSD3_PSR_REQUIREMENTS } from "@/data/psd3-psr-requirements";
-import { PRODUCT_CONFIG } from "@/lib/app-config";
+import { PRODUCT_CONFIG, REGULATORY_SOURCE_SUMMARY } from "@/lib/app-config";
 import {
   COMPANY_TYPES,
   COUNTRIES,
-  DEFAULT_COMPANY_PROFILE,
+  EMPTY_COMPANY_PROFILE,
   DISCLAIMER,
   SERVICES,
   type AnalysisResult,
@@ -58,11 +62,10 @@ const INSIGHTS = [
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("landing");
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile>(
-    DEFAULT_COMPANY_PROFILE
+    EMPTY_COMPANY_PROFILE
   );
   const [documents, setDocuments] = useState<UploadedDocument[]>([]);
   const [uploadNotice, setUploadNotice] = useState("");
-  const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const [isExtractingDocuments, setIsExtractingDocuments] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [processingIndex, setProcessingIndex] = useState(0);
@@ -79,21 +82,10 @@ export default function Home() {
     [result]
   );
 
-  async function loadSampleDocuments() {
-    setIsLoadingSamples(true);
-    setUploadNotice("");
-    try {
-      const response = await fetch("/api/sample-docs");
-      if (!response.ok) throw new Error("Could not load samples");
-      const data = (await response.json()) as { documents: UploadedDocument[] };
-      setDocuments(data.documents);
-      setUploadNotice("Loaded 5 complex sample documents with intentional evidence gaps.");
-    } catch {
-      setUploadNotice("Sample documents could not be loaded. Try refreshing the page.");
-    } finally {
-      setIsLoadingSamples(false);
-    }
-  }
+  const documentCheck = useMemo(
+    () => evaluateRequiredDocuments(companyProfile, documents),
+    [companyProfile, documents]
+  );
 
   async function handleUpload(files: FileList | null) {
     if (!files) return;
@@ -129,8 +121,29 @@ export default function Home() {
   }
 
   async function runAssessment() {
+    if (!companyProfile.companyName.trim()) {
+      setError("Enter the company name before running the assessment.");
+      setScreen("scope");
+      return;
+    }
+
+    if (companyProfile.services.length === 0) {
+      setError("Select at least one service or flow before running the assessment.");
+      setScreen("scope");
+      return;
+    }
+
     if (documents.length === 0) {
-      setUploadNotice("Load sample documents or upload at least one PDF, .txt or .md file.");
+      setUploadNotice("Upload the required PDF, .txt or .md evidence before running the assessment.");
+      return;
+    }
+
+    if (documentCheck.missing.length > 0) {
+      setUploadNotice(
+        `Missing required evidence: ${documentCheck.missing
+          .map((document) => document.title)
+          .join(", ")}.`
+      );
       return;
     }
 
@@ -157,15 +170,29 @@ export default function Home() {
       ]);
 
       if (!response.ok) {
-        throw new Error("Analysis failed");
+        const payload = (await response.json().catch(() => null)) as
+          | { error?: string; missingRequiredDocuments?: Array<{ title: string }> }
+          | null;
+        if (payload?.missingRequiredDocuments?.length) {
+          throw new Error(
+            `Missing required evidence: ${payload.missingRequiredDocuments
+              .map((document) => document.title)
+              .join(", ")}.`
+          );
+        }
+        throw new Error(payload?.error ?? "Analysis failed");
       }
 
       const data = (await response.json()) as AnalysisResult;
       setResult(data);
       setProcessingIndex(PROCESSING_STEPS.length - 1);
       setScreen("results");
-    } catch {
-      setError("The assessment could not be completed. Check the server logs and try again.");
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "The assessment could not be completed. Check the server logs and try again."
+      );
       setScreen("documents");
     } finally {
       window.clearInterval(timer);
@@ -174,7 +201,7 @@ export default function Home() {
   }
 
   function resetAssessment() {
-    setCompanyProfile(DEFAULT_COMPANY_PROFILE);
+    setCompanyProfile(EMPTY_COMPANY_PROFILE);
     setDocuments([]);
     setResult(null);
     setSelectedItem(null);
@@ -211,21 +238,24 @@ export default function Home() {
             {screen === "scope" ? (
               <CompanyScopeStep
                 profile={companyProfile}
+                error={error}
                 onChange={setCompanyProfile}
                 onToggleService={toggleService}
-                onNext={() => setScreen("documents")}
+                onNext={() => {
+                  setError("");
+                  setScreen("documents");
+                }}
               />
             ) : null}
 
             {screen === "documents" ? (
               <DocumentsStep
                 documents={documents}
-                isLoadingSamples={isLoadingSamples}
                 isExtractingDocuments={isExtractingDocuments}
+                documentCheck={documentCheck}
                 uploadNotice={uploadNotice}
                 error={error}
                 onBack={() => setScreen("scope")}
-                onLoadSamples={loadSampleDocuments}
                 onUpload={handleUpload}
                 onRemoveDocument={(name) =>
                   setDocuments((current) => current.filter((doc) => doc.name !== name))
@@ -378,14 +408,14 @@ function Landing({ onStart }: { onStart: () => void }) {
       <div className="rounded-xl border border-slateLine bg-white p-4 shadow-soft">
         <div className="flex items-center justify-between border-b border-slateLine pb-4">
           <div>
-            <p className="text-xs font-semibold uppercase text-slate-500">Complex sample</p>
+            <p className="text-xs font-semibold uppercase text-slate-500">Coverage model</p>
             <h2 className="mt-1 text-xl font-semibold">Readiness command center</h2>
           </div>
           <StatusBadge status="Partially covered" />
         </div>
         <div className="grid gap-4 py-5 sm:grid-cols-4">
           <MetricCard label="Controls" value={PSD3_PSR_REQUIREMENTS.length} tone="blue" />
-          <MetricCard label="Sources" value="3" tone="green" />
+          <MetricCard label="Sources" value={REGULATORY_SOURCE_SUMMARY.length} tone="green" />
           <MetricCard label="PDF" value="Enabled" tone="amber" />
           <MetricCard label="Storage" value="Supabase" tone="gray" />
         </div>
@@ -413,7 +443,7 @@ function Landing({ onStart }: { onStart: () => void }) {
           <FeatureCard
             icon={<FileText className="h-5 w-5" aria-hidden="true" />}
             title="Analyze documents"
-            text="Use sample docs or upload PDF, text and Markdown evidence."
+            text="Upload PDF, text and Markdown evidence required by the selected services."
           />
           <FeatureCard
             icon={<Search className="h-5 w-5" aria-hidden="true" />}
@@ -433,15 +463,19 @@ function Landing({ onStart }: { onStart: () => void }) {
 
 function CompanyScopeStep({
   profile,
+  error,
   onChange,
   onToggleService,
   onNext
 }: {
   profile: CompanyProfile;
+  error: string;
   onChange: (profile: CompanyProfile) => void;
   onToggleService: (service: ServiceFlow) => void;
   onNext: () => void;
 }) {
+  const canContinue = profile.companyName.trim().length > 0 && profile.services.length > 0;
+
   return (
     <Panel>
       <div className="flex flex-col gap-3 border-b border-slateLine pb-6 sm:flex-row sm:items-start sm:justify-between">
@@ -449,12 +483,18 @@ function CompanyScopeStep({
           <p className="text-sm font-semibold text-regBlue">Step 1</p>
           <h1 className="mt-1 text-3xl font-semibold">Tell us about your payment fintech</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            The sample profile is a complex EU payment institution with cards,
-            wallets, instant payments, acquiring, open banking and e-money services.
+            Select the regulated entity type and every payment service that should drive the
+            compliance scope and required evidence pack.
           </p>
         </div>
         <Building2 className="h-8 w-8 text-slate-400" aria-hidden="true" />
       </div>
+
+      {error ? (
+        <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {error}
+        </div>
+      ) : null}
 
       <div className="grid gap-5 py-6 md:grid-cols-2">
         <label className="block">
@@ -540,7 +580,8 @@ function CompanyScopeStep({
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex items-center gap-2 rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          disabled={!canContinue}
+          className="inline-flex items-center gap-2 rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Continue to documents
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -552,23 +593,24 @@ function CompanyScopeStep({
 
 function DocumentsStep({
   documents,
-  isLoadingSamples,
   isExtractingDocuments,
+  documentCheck,
   uploadNotice,
   error,
   onBack,
-  onLoadSamples,
   onUpload,
   onRemoveDocument,
   onRun
 }: {
   documents: UploadedDocument[];
-  isLoadingSamples: boolean;
   isExtractingDocuments: boolean;
+  documentCheck: {
+    required: RequiredDocumentStatus[];
+    missing: RequiredDocumentStatus[];
+  };
   uploadNotice: string;
   error: string;
   onBack: () => void;
-  onLoadSamples: () => void;
   onUpload: (files: FileList | null) => void;
   onRemoveDocument: (name: string) => void;
   onRun: () => void;
@@ -578,33 +620,16 @@ function DocumentsStep({
       <div className="flex flex-col gap-3 border-b border-slateLine pb-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-regBlue">Step 2</p>
-          <h1 className="mt-1 text-3xl font-semibold">Upload or use sample fintech documents</h1>
+          <h1 className="mt-1 text-3xl font-semibold">Upload the required evidence documents</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            Use the complex sample corpus or upload PDF, text and Markdown files.
-            PDFs are parsed server-side before the analysis runs.
+            The required document list is generated from the services selected in scope.
+            Analysis is blocked until every required evidence pack is represented.
           </p>
         </div>
         <FileText className="h-8 w-8 text-slate-400" aria-hidden="true" />
       </div>
 
-      <div className="grid gap-4 py-6 md:grid-cols-2">
-        <button
-          type="button"
-          onClick={onLoadSamples}
-          disabled={isLoadingSamples || isExtractingDocuments}
-          className="rounded-lg border border-slateLine bg-slate-50 p-5 text-left transition hover:border-regBlue hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-regBlue shadow-sm">
-              <FileText className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <div>
-              <p className="font-semibold">Use sample documents</p>
-              <p className="mt-1 text-sm text-slate-600">Payment, fraud, SCA, API and support docs</p>
-            </div>
-          </div>
-        </button>
-
+      <div className="grid gap-4 py-6 lg:grid-cols-[0.9fr_1.1fr]">
         <label className="rounded-lg border border-dashed border-slate-300 bg-white p-5 transition hover:border-regBlue">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 text-slate-700">
@@ -626,6 +651,49 @@ function DocumentsStep({
             onChange={(event) => onUpload(event.target.files)}
           />
         </label>
+
+        <div className="rounded-lg border border-slateLine bg-slate-50 p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-semibold">Required evidence for selected services</p>
+              <p className="mt-1 text-sm text-slate-600">
+                {documentCheck.required.length} pack(s), {documentCheck.missing.length} missing.
+              </p>
+            </div>
+            <ClipboardList className="h-5 w-5 text-slate-400" aria-hidden="true" />
+          </div>
+          <div className="mt-4 max-h-80 space-y-3 overflow-y-auto pr-1">
+            {documentCheck.required.map((requirement) => (
+              <div
+                key={requirement.id}
+                className={`rounded-lg border bg-white p-3 ${
+                  requirement.satisfiedBy.length
+                    ? "border-green-200"
+                    : "border-amber-200"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold">{requirement.title}</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-600">
+                      {requirement.description}
+                    </p>
+                  </div>
+                  {requirement.satisfiedBy.length ? (
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-regGreen" aria-hidden="true" />
+                  ) : (
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-regAmber" aria-hidden="true" />
+                  )}
+                </div>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  {requirement.satisfiedBy.length
+                    ? `Matched: ${requirement.satisfiedBy.join(", ")}`
+                    : `Needed for: ${requirement.requirementIds.join(", ")}`}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {uploadNotice ? (
