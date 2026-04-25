@@ -26,6 +26,13 @@ function main() {
   const syntheticDocs = generateSyntheticDocuments();
   const completeResult = gatedResult(fullServiceProfile, [syntheticDocs.complete]);
   const partialResult = gatedResult(fullServiceProfile, [syntheticDocs.partial]);
+  const partialThenCompleteResult = gatedResult(fullServiceProfile, [
+    syntheticDocs.partial,
+    syntheticDocs.complete
+  ]);
+  const combinedPolicyFirstResult = gatedResult(fullServiceProfile, [
+    syntheticDocs.combinedPolicyFirst
+  ]);
   const emptyResult = gatedResult(fullServiceProfile, [syntheticDocs.empty]);
   const expectedOnlyResult = gatedResult(fullServiceProfile, [
     syntheticDocs.expectedOnly
@@ -33,6 +40,8 @@ function main() {
 
   assertAllStatuses(completeResult, "Covered");
   assertAllStatuses(partialResult, "Partially covered");
+  assertAllStatuses(partialThenCompleteResult, "Covered");
+  assertAllStatuses(combinedPolicyFirstResult, "Covered");
   assertAllStatuses(emptyResult, "Not evidenced");
   assertAllStatuses(expectedOnlyResult, "Not evidenced");
 
@@ -42,6 +51,8 @@ function main() {
         generatedDir,
         completeSummary: completeResult.summary,
         partialSummary: partialResult.summary,
+        partialThenCompleteSummary: partialThenCompleteResult.summary,
+        combinedPolicyFirstSummary: combinedPolicyFirstResult.summary,
         emptySummary: emptyResult.summary,
         expectedOnlySummary: expectedOnlyResult.summary
       },
@@ -54,6 +65,7 @@ function main() {
 function generateSyntheticDocuments(): {
   complete: UploadedDocument;
   partial: UploadedDocument;
+  combinedPolicyFirst: UploadedDocument;
   empty: UploadedDocument;
   expectedOnly: UploadedDocument;
 } {
@@ -81,6 +93,7 @@ The policy sets ownership and governance for ${requirement.domain}. Operational 
     .join("\n\n");
   const empty =
     "Atlas Payments EU corporate overview. The company supports merchant commerce operations in the European Union.";
+  const combinedPolicyFirst = `${partial}\n\n${complete}`;
   const expectedOnly = requirements
     .map(
       (requirement) => `Requirement ${requirement.id}: ${requirement.title}
@@ -92,6 +105,7 @@ ${requirement.expectedEvidence.map((item) => `- ${item}`).join("\n")}`
 
   writeFixture("covered-pack.txt", complete);
   writeFixture("partial-pack.txt", partial);
+  writeFixture("policy-first-covered-pack.txt", combinedPolicyFirst);
   writeFixture("not-evidenced-pack.txt", empty);
   writeFixture("expected-only-pack.txt", expectedOnly);
 
@@ -105,6 +119,11 @@ ${requirement.expectedEvidence.map((item) => `- ${item}`).join("\n")}`
       name: "partial-pack.txt",
       type: "text/plain",
       content: partial
+    },
+    combinedPolicyFirst: {
+      name: "policy-first-covered-pack.txt",
+      type: "text/plain",
+      content: combinedPolicyFirst
     },
     empty: {
       name: "not-evidenced-pack.txt",

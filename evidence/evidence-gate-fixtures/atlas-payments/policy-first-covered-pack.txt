@@ -1,0 +1,467 @@
+Requirement PSR-PAYEE-001: Verify payee name before credit transfer execution
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Payee Verification. Operational artefact collection is pending.
+
+Requirement PSR-FRAUD-001: Operate risk-based fraud prevention controls
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Fraud Prevention. Operational artefact collection is pending.
+
+Requirement PSR-TXN-001: Monitor payment transactions for abnormal behavior
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Transaction Monitoring. Operational artefact collection is pending.
+
+Requirement PSR-WARN-001: Warn customers when suspected payment fraud is detected
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Customer Warning Flows. Operational artefact collection is pending.
+
+Requirement PSR-APPFRAUD-001: Define impersonation and APP fraud liability handling
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Authorised Push Payment Fraud. Operational artefact collection is pending.
+
+Requirement PSR-LIAB-001: Define customer reimbursement and liability handling
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Liability and Reimbursement. Operational artefact collection is pending.
+
+Requirement PSR-TRANS-001: Communicate payment risks, fees and outcomes clearly
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Customer Transparency. Operational artefact collection is pending.
+
+Requirement PSR-INC-001: Escalate fraud incidents with ownership and timelines
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Incident / Fraud Escalation. Operational artefact collection is pending.
+
+Requirement PSD3-SCA-001: Apply SCA to high-risk payment and account access events
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Strong Customer Authentication. Operational artefact collection is pending.
+
+Requirement PSD3-SCA-002: Define SCA fallback and exemption logic
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for SCA Fallback / Exemptions. Operational artefact collection is pending.
+
+Requirement PSD3-SCA-003: Provide accessible SCA methods for all customer groups
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for SCA Accessibility. Operational artefact collection is pending.
+
+Requirement PSD3-OB-001: Maintain a reliable dedicated open banking interface
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Open Banking Dedicated Interface. Operational artefact collection is pending.
+
+Requirement PSD3-OB-002: Provide a user dashboard for open banking permissions
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for User Permission Dashboard. Operational artefact collection is pending.
+
+Requirement PSD3-OB-003: Capture and manage user consent lifecycle
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Open Banking Consent. Operational artefact collection is pending.
+
+Requirement PSR-DATA-001: Govern fraud data sharing and special category processing
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Data Protection / Fraud Data Sharing. Operational artefact collection is pending.
+
+Requirement PSD3-LIC-001: Evidence operational readiness for regulated services
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Licensing / Operational Readiness. Operational artefact collection is pending.
+
+Requirement PSD3-SAFE-001: Safeguard payment and e-money customer funds
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Safeguarding / Customer Funds. Operational artefact collection is pending.
+
+Requirement PSR-CASH-001: Document cash withdrawal service disclosures where relevant
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Access to Cash. Operational artefact collection is pending.
+
+Requirement PSR-INSTANT-001: Evidence instant payment reachability and beneficiary verification
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Instant Payments. Operational artefact collection is pending.
+
+Requirement PSR-AUDIT-001: Keep audit evidence for payments, consent and fraud decisions
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Record Keeping / Audit Trail. Operational artefact collection is pending.
+
+Requirement PSR-LIMIT-001: Offer spending limits and payment blocking measures
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Fraud Prevention / User Controls. Operational artefact collection is pending.
+
+Requirement PSR-SUSPICIOUS-001: Freeze suspicious received transactions
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Fraud Prevention / Receiving PSP. Operational artefact collection is pending.
+
+Requirement PSR-IMPERSONATION-001: Refund qualifying PSP impersonation fraud cases
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Impersonation Fraud / Reimbursement. Operational artefact collection is pending.
+
+Requirement PSR-UNAUTH-001: Treat fraudster-initiated or altered transactions as unauthorised
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Unauthorised Transactions. Operational artefact collection is pending.
+
+Requirement PSR-HUMAN-001: Provide human customer support for payment users
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Customer Support. Operational artefact collection is pending.
+
+Requirement PSR-ADR-001: Participate in alternative dispute resolution when chosen by consumers
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Dispute Resolution. Operational artefact collection is pending.
+
+Requirement PSR-FEE-001: Disclose all charges before payment initiation
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Customer Transparency. Operational artefact collection is pending.
+
+Requirement PSR-CASH-002: Support retail cash withdrawals without purchase where offered
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Access to Cash. Operational artefact collection is pending.
+
+Requirement PSR-ATM-001: Display ATM fees and exchange rates before withdrawal
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Access to Cash / Transparency. Operational artefact collection is pending.
+
+Requirement PSR-OB-004: Remove prohibited obstacles to open banking data access
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Open Banking Data Access. Operational artefact collection is pending.
+
+Requirement PSD3-ACCOUNT-001: Provide payment institutions with non-discriminatory payment account access
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Access to Payment Accounts. Operational artefact collection is pending.
+
+Requirement PSR-MOBILE-001: Ensure FRAND access to mobile device and electronic service capabilities
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Mobile / Front-End Access. Operational artefact collection is pending.
+
+Requirement PSD3-AUTH-001: Maintain PSD3 authorisation and prudential application evidence
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Authorisation / Prudential Requirements. Operational artefact collection is pending.
+
+Requirement PSD3-TRANSITION-001: Plan re-authorisation for existing PSD2 and e-money activities
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Licensing / Transitional Measures. Operational artefact collection is pending.
+
+Requirement PSD3-PASSPORT-001: Evidence right-of-establishment and freedom-to-provide-services notifications
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Cross-Border Services. Operational artefact collection is pending.
+
+Requirement PSR-PLATFORM-001: Escalate fraudulent content to online platforms and recover platform-liability evidence
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Online Platform Fraud. Operational artefact collection is pending.
+
+Requirement PSR-ADS-001: Verify authorisation evidence for financial services advertising
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Financial Services Advertising. Operational artefact collection is pending.
+
+Requirement PSR-EDU-001: Provide fraud education and awareness content
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Fraud Education. Operational artefact collection is pending.
+
+Requirement PSR-FRAUD-REPORT-001: Report fraud data and monitor fraud trends by payment instrument
+Atlas Payments EU policy statement.
+The policy sets ownership and governance for Fraud Reporting. Operational artefact collection is pending.
+
+Requirement PSR-PAYEE-001: Verify payee name before credit transfer execution
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Payee Verification:
+- payee-name or IBAN-name verification flow. Log extract, screenshot, approval record, test result and audit event retained.
+- match, close-match and mismatch decision logic. Log extract, screenshot, approval record, test result and audit event retained.
+- customer notification copy before execution. Log extract, screenshot, approval record, test result and audit event retained.
+- audit events proving the check was offered and displayed. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-FRAUD-001: Operate risk-based fraud prevention controls
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Fraud Prevention:
+- fraud policy. Log extract, screenshot, approval record, test result and audit event retained.
+- risk scoring model and control ownership. Log extract, screenshot, approval record, test result and audit event retained.
+- case management workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- periodic rule review and tuning evidence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-TXN-001: Monitor payment transactions for abnormal behavior
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Transaction Monitoring:
+- transaction monitoring rules. Log extract, screenshot, approval record, test result and audit event retained.
+- behavioral and environmental risk indicators. Log extract, screenshot, approval record, test result and audit event retained.
+- alert thresholds and review procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- false positive and drift review evidence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-WARN-001: Warn customers when suspected payment fraud is detected
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Customer Warning Flows:
+- customer warning flow. Log extract, screenshot, approval record, test result and audit event retained.
+- scam and impersonation warning copy. Log extract, screenshot, approval record, test result and audit event retained.
+- trigger conditions. Log extract, screenshot, approval record, test result and audit event retained.
+- audit trail of warnings shown. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-APPFRAUD-001: Define impersonation and APP fraud liability handling
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Authorised Push Payment Fraud:
+- APP fraud intake procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- impersonation scenario decision tree. Log extract, screenshot, approval record, test result and audit event retained.
+- liability assessment checklist. Log extract, screenshot, approval record, test result and audit event retained.
+- customer outcome and reimbursement templates. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-LIAB-001: Define customer reimbursement and liability handling
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Liability and Reimbursement:
+- reimbursement workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- liability decision criteria. Log extract, screenshot, approval record, test result and audit event retained.
+- customer communication template. Log extract, screenshot, approval record, test result and audit event retained.
+- appeal or dispute escalation path. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-TRANS-001: Communicate payment risks, fees and outcomes clearly
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Customer Transparency:
+- customer communication templates. Log extract, screenshot, approval record, test result and audit event retained.
+- payment status and receipt copy. Log extract, screenshot, approval record, test result and audit event retained.
+- fee and currency conversion disclosure. Log extract, screenshot, approval record, test result and audit event retained.
+- support escalation messaging. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-INC-001: Escalate fraud incidents with ownership and timelines
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Incident / Fraud Escalation:
+- fraud incident escalation policy. Log extract, screenshot, approval record, test result and audit event retained.
+- triage severity model. Log extract, screenshot, approval record, test result and audit event retained.
+- owner and SLA matrix. Log extract, screenshot, approval record, test result and audit event retained.
+- post-incident review template. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-SCA-001: Apply SCA to high-risk payment and account access events
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Strong Customer Authentication:
+- SCA policy. Log extract, screenshot, approval record, test result and audit event retained.
+- MFA, possession, inherence or knowledge flow. Log extract, screenshot, approval record, test result and audit event retained.
+- step-up triggers. Log extract, screenshot, approval record, test result and audit event retained.
+- authentication audit events. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-SCA-002: Define SCA fallback and exemption logic
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for SCA Fallback / Exemptions:
+- SCA exemption policy. Log extract, screenshot, approval record, test result and audit event retained.
+- fallback procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- risk acceptance criteria. Log extract, screenshot, approval record, test result and audit event retained.
+- failed authentication handling. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-SCA-003: Provide accessible SCA methods for all customer groups
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for SCA Accessibility:
+- accessible SCA option. Log extract, screenshot, approval record, test result and audit event retained.
+- non-smartphone authentication path. Log extract, screenshot, approval record, test result and audit event retained.
+- accessibility testing evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- customer support fallback process. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-OB-001: Maintain a reliable dedicated open banking interface
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Open Banking Dedicated Interface:
+- dedicated interface documentation. Log extract, screenshot, approval record, test result and audit event retained.
+- availability and latency metrics. Log extract, screenshot, approval record, test result and audit event retained.
+- third-party access and onboarding procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- incident status and communication process. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-OB-002: Provide a user dashboard for open banking permissions
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for User Permission Dashboard:
+- permission dashboard. Log extract, screenshot, approval record, test result and audit event retained.
+- active consent list. Log extract, screenshot, approval record, test result and audit event retained.
+- revoke access action. Log extract, screenshot, approval record, test result and audit event retained.
+- customer communication copy. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-OB-003: Capture and manage user consent lifecycle
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Open Banking Consent:
+- consent endpoint documentation. Log extract, screenshot, approval record, test result and audit event retained.
+- consent scope model. Log extract, screenshot, approval record, test result and audit event retained.
+- consent expiry and renewal logic. Log extract, screenshot, approval record, test result and audit event retained.
+- consent revocation audit records. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-DATA-001: Govern fraud data sharing and special category processing
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Data Protection / Fraud Data Sharing:
+- fraud information sharing arrangement. Log extract, screenshot, approval record, test result and audit event retained.
+- data protection impact assessment. Log extract, screenshot, approval record, test result and audit event retained.
+- personal data minimisation controls. Log extract, screenshot, approval record, test result and audit event retained.
+- supervisory authority consultation record where required. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-LIC-001: Evidence operational readiness for regulated services
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Licensing / Operational Readiness:
+- operational readiness register. Log extract, screenshot, approval record, test result and audit event retained.
+- regulated service scope. Log extract, screenshot, approval record, test result and audit event retained.
+- outsourcing control inventory. Log extract, screenshot, approval record, test result and audit event retained.
+- governance owner. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-SAFE-001: Safeguard payment and e-money customer funds
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Safeguarding / Customer Funds:
+- safeguarding policy. Log extract, screenshot, approval record, test result and audit event retained.
+- customer funds reconciliation evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- bank account diversification or concentration risk assessment. Log extract, screenshot, approval record, test result and audit event retained.
+- board or compliance oversight record. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-CASH-001: Document cash withdrawal service disclosures where relevant
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Access to Cash:
+- cash withdrawal flow. Log extract, screenshot, approval record, test result and audit event retained.
+- ATM or merchant withdrawal fee disclosure. Log extract, screenshot, approval record, test result and audit event retained.
+- customer receipt or statement evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- support handling for failed withdrawals. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-INSTANT-001: Evidence instant payment reachability and beneficiary verification
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Instant Payments:
+- instant payment receive and send support evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- fee parity control. Log extract, screenshot, approval record, test result and audit event retained.
+- beneficiary verification evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- operational monitoring for instant payments. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-AUDIT-001: Keep audit evidence for payments, consent and fraud decisions
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Record Keeping / Audit Trail:
+- audit log schema. Log extract, screenshot, approval record, test result and audit event retained.
+- retention policy. Log extract, screenshot, approval record, test result and audit event retained.
+- decision history. Log extract, screenshot, approval record, test result and audit event retained.
+- export or review workflow. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-LIMIT-001: Offer spending limits and payment blocking measures
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Fraud Prevention / User Controls:
+- spending-limit configuration flow. Log extract, screenshot, approval record, test result and audit event retained.
+- payment instrument or account blocking control. Log extract, screenshot, approval record, test result and audit event retained.
+- risk-based trigger logic for limits and blocks. Log extract, screenshot, approval record, test result and audit event retained.
+- audit evidence for customer changes and fraud blocks. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-SUSPICIOUS-001: Freeze suspicious received transactions
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Fraud Prevention / Receiving PSP:
+- incoming transaction suspicious-activity rules. Log extract, screenshot, approval record, test result and audit event retained.
+- freeze or hold workflow for receiving PSP operations. Log extract, screenshot, approval record, test result and audit event retained.
+- release/escalation approval procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- customer and counterparty communication templates. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-IMPERSONATION-001: Refund qualifying PSP impersonation fraud cases
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Impersonation Fraud / Reimbursement:
+- PSP impersonation fraud intake procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- police report and PSP notification evidence checklist. Log extract, screenshot, approval record, test result and audit event retained.
+- full refund decision workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- customer outcome template and audit trail. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-UNAUTH-001: Treat fraudster-initiated or altered transactions as unauthorised
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Unauthorised Transactions:
+- fraudster-initiated transaction classification rules. Log extract, screenshot, approval record, test result and audit event retained.
+- altered transaction investigation workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- full amount reimbursement decision criteria. Log extract, screenshot, approval record, test result and audit event retained.
+- case evidence and customer notification templates. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-HUMAN-001: Provide human customer support for payment users
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Customer Support:
+- human support access channel. Log extract, screenshot, approval record, test result and audit event retained.
+- support hours and escalation rules. Log extract, screenshot, approval record, test result and audit event retained.
+- chatbot handoff procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- support accessibility and audit evidence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-ADR-001: Participate in alternative dispute resolution when chosen by consumers
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Dispute Resolution:
+- ADR procedure and competent body mapping. Log extract, screenshot, approval record, test result and audit event retained.
+- consumer election and consent capture. Log extract, screenshot, approval record, test result and audit event retained.
+- case handoff workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- outcome recording and customer communication templates. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-FEE-001: Disclose all charges before payment initiation
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Customer Transparency:
+- pre-payment fee disclosure screen. Log extract, screenshot, approval record, test result and audit event retained.
+- currency conversion charge calculation. Log extract, screenshot, approval record, test result and audit event retained.
+- fixed fee disclosure by channel. Log extract, screenshot, approval record, test result and audit event retained.
+- receipt and audit evidence of displayed charges. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-CASH-002: Support retail cash withdrawals without purchase where offered
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Access to Cash:
+- retail cash withdrawal flow without purchase. Log extract, screenshot, approval record, test result and audit event retained.
+- minimum and maximum withdrawal rule handling. Log extract, screenshot, approval record, test result and audit event retained.
+- merchant or retailer operational procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- customer fee and failure disclosure. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-ATM-001: Display ATM fees and exchange rates before withdrawal
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Access to Cash / Transparency:
+- ATM fee pre-disclosure screen. Log extract, screenshot, approval record, test result and audit event retained.
+- exchange-rate display logic. Log extract, screenshot, approval record, test result and audit event retained.
+- customer acknowledgement or cancellation path. Log extract, screenshot, approval record, test result and audit event retained.
+- cash withdrawal receipt evidence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-OB-004: Remove prohibited obstacles to open banking data access
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Open Banking Data Access:
+- open banking obstacle assessment. Log extract, screenshot, approval record, test result and audit event retained.
+- third-party provider access test evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- non-discrimination controls for ASPSP interfaces. Log extract, screenshot, approval record, test result and audit event retained.
+- incident and denial reason logs. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-ACCOUNT-001: Provide payment institutions with non-discriminatory payment account access
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Access to Payment Accounts:
+- payment institution account access policy. Log extract, screenshot, approval record, test result and audit event retained.
+- objective onboarding and refusal criteria. Log extract, screenshot, approval record, test result and audit event retained.
+- account access SLA and escalation process. Log extract, screenshot, approval record, test result and audit event retained.
+- refusal or restriction audit trail. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-MOBILE-001: Ensure FRAND access to mobile device and electronic service capabilities
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Mobile / Front-End Access:
+- mobile device or electronic service dependency map. Log extract, screenshot, approval record, test result and audit event retained.
+- FRAND access assessment. Log extract, screenshot, approval record, test result and audit event retained.
+- front-end payment data storage and transfer controls. Log extract, screenshot, approval record, test result and audit event retained.
+- vendor restriction escalation evidence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-AUTH-001: Maintain PSD3 authorisation and prudential application evidence
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Authorisation / Prudential Requirements:
+- authorisation application pack. Log extract, screenshot, approval record, test result and audit event retained.
+- initial capital and own-funds calculation. Log extract, screenshot, approval record, test result and audit event retained.
+- budget forecast and business plan. Log extract, screenshot, approval record, test result and audit event retained.
+- service-by-service risk and control mapping. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-TRANSITION-001: Plan re-authorisation for existing PSD2 and e-money activities
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Licensing / Transitional Measures:
+- existing licence inventory. Log extract, screenshot, approval record, test result and audit event retained.
+- PSD3 re-authorisation timeline. Log extract, screenshot, approval record, test result and audit event retained.
+- gap assessment against new application requirements. Log extract, screenshot, approval record, test result and audit event retained.
+- board or compliance approval record. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSD3-PASSPORT-001: Evidence right-of-establishment and freedom-to-provide-services notifications
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Cross-Border Services:
+- host Member State services inventory. Log extract, screenshot, approval record, test result and audit event retained.
+- right of establishment or freedom to provide services notification. Log extract, screenshot, approval record, test result and audit event retained.
+- branch or agent register evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- competent-authority correspondence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-PLATFORM-001: Escalate fraudulent content to online platforms and recover platform-liability evidence
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Online Platform Fraud:
+- fraudulent content notification procedure. Log extract, screenshot, approval record, test result and audit event retained.
+- platform takedown evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- customer reimbursement and platform recovery workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- DSA-linked escalation records. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-ADS-001: Verify authorisation evidence for financial services advertising
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Financial Services Advertising:
+- advertiser authorisation or exemption evidence. Log extract, screenshot, approval record, test result and audit event retained.
+- country-by-country advertising approval record. Log extract, screenshot, approval record, test result and audit event retained.
+- platform submission proof. Log extract, screenshot, approval record, test result and audit event retained.
+- marketing and legal review workflow. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-EDU-001: Provide fraud education and awareness content
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Fraud Education:
+- fraud education content. Log extract, screenshot, approval record, test result and audit event retained.
+- customer campaign or in-product awareness flow. Log extract, screenshot, approval record, test result and audit event retained.
+- impersonation scam guidance. Log extract, screenshot, approval record, test result and audit event retained.
+- content review and effectiveness evidence. Log extract, screenshot, approval record, test result and audit event retained.
+
+Requirement PSR-FRAUD-REPORT-001: Report fraud data and monitor fraud trends by payment instrument
+Atlas Payments EU supervisory evidence register entry.
+Operational evidence retained for Fraud Reporting:
+- fraud reporting data model. Log extract, screenshot, approval record, test result and audit event retained.
+- payment instrument fraud taxonomy. Log extract, screenshot, approval record, test result and audit event retained.
+- semi-annual reporting workflow. Log extract, screenshot, approval record, test result and audit event retained.
+- management review of fraud trends and mitigants. Log extract, screenshot, approval record, test result and audit event retained.

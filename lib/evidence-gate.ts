@@ -384,29 +384,36 @@ function findEvidence(
   documents: UploadedDocument[],
   phrases: string[]
 ): EvidenceHit | undefined {
+  const hits: EvidenceHit[] = [];
+
   for (const document of documents) {
     const lowerContent = document.content.toLowerCase();
     for (const phrase of uniqueStrings(phrases.flatMap(expandPhraseVariants))) {
       const normalizedPhrase = phrase.toLowerCase().trim();
       if (normalizedPhrase.length < 3) continue;
-      const index = lowerContent.indexOf(normalizedPhrase);
-      if (index === -1) continue;
+      let index = lowerContent.indexOf(normalizedPhrase);
 
-      const excerpt = createExcerpt(document.content, index);
-      if (isNegativeEvidenceContext(excerpt)) continue;
-      const evidenceType = classifyEvidence(document.content, index, excerpt);
-      if (evidenceType === "demo_placeholder") continue;
-      return {
-        sourceDocument: document.name,
-        excerpt,
-        matchedPhrase: phrase,
-        evidenceType,
-        strength: evidenceStrength(evidenceType)
-      };
+      while (index !== -1) {
+        const excerpt = createExcerpt(document.content, index);
+        if (!isNegativeEvidenceContext(excerpt)) {
+          const evidenceType = classifyEvidence(document.content, index, excerpt);
+          if (evidenceType !== "demo_placeholder") {
+            hits.push({
+              sourceDocument: document.name,
+              excerpt,
+              matchedPhrase: phrase,
+              evidenceType,
+              strength: evidenceStrength(evidenceType)
+            });
+          }
+        }
+
+        index = lowerContent.indexOf(normalizedPhrase, index + normalizedPhrase.length);
+      }
     }
   }
 
-  return undefined;
+  return hits.sort(compareEvidenceHits)[0];
 }
 
 function isNegativeEvidenceContext(excerpt: string): boolean {

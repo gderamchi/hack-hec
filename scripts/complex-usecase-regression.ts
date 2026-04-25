@@ -801,13 +801,17 @@ function outOfScopeNoise(): string {
 }
 
 async function analyze(useCase: UseCase): Promise<AnalyzeOutcome> {
+  const documents = useCase.documents.toSorted((left, right) =>
+    left.name.localeCompare(right.name)
+  );
+
   if (target === "prod") {
     const response = await fetch(prodAnalyzeUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         companyProfile: useCase.profile,
-        documents: useCase.documents
+        documents
       })
     });
     const payload = (await response.json().catch(() => ({}))) as
@@ -834,7 +838,7 @@ async function analyze(useCase: UseCase): Promise<AnalyzeOutcome> {
     };
   }
 
-  const documentCheck = evaluateRequiredDocuments(useCase.profile, useCase.documents);
+  const documentCheck = evaluateRequiredDocuments(useCase.profile, documents);
   if (documentCheck.missing.length > 0) {
     return {
       ok: false,
@@ -850,7 +854,7 @@ async function analyze(useCase: UseCase): Promise<AnalyzeOutcome> {
   const baseline = runFallbackAnalysis(useCase.profile, useCase.documents);
   const gated = applyEvidenceGate({
     companyProfile: useCase.profile,
-    documents: useCase.documents,
+    documents,
     result: baseline
   });
 
