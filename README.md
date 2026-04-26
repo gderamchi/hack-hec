@@ -1,10 +1,10 @@
-# CompliancePilot
+# Complee
 
-CompliancePilot is a PSD3/PSR readiness workspace for payment and fintech teams. It turns a company profile and source evidence documents into a readiness matrix, evidence-backed gaps, a remediation roadmap, and an exportable board-style report.
+Complee is a guided regulatory expansion workspace for payment and fintech teams. It turns a company profile and source evidence documents into a readiness matrix, evidence-backed gaps, a remediation roadmap, an exportable board-style report, and a Live Compliance Agent profile.
 
 The project is built as a Next.js app with local deterministic analysis, optional OpenAI analysis, strict evidence gating, and optional Supabase persistence.
 
-> CompliancePilot is an AI-assisted assessment workspace. It is not legal advice, does not certify compliance, and should be reviewed by qualified compliance and legal teams before operational use.
+> Complee is an AI-assisted assessment workspace. It is not legal advice, does not certify compliance, and should be reviewed by qualified compliance and legal teams before operational use.
 
 ## What It Does
 
@@ -46,8 +46,8 @@ OPENAI_REASONING_EFFORT=none
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
 
-NEXT_PUBLIC_PRODUCT_NAME=CompliancePilot
-NEXT_PUBLIC_PRODUCT_SHORT_NAME=CompliancePilot
+NEXT_PUBLIC_PRODUCT_NAME=Complee
+NEXT_PUBLIC_PRODUCT_SHORT_NAME=Complee
 ```
 
 OpenAI and Supabase are optional for local demos. Without `OPENAI_API_KEY`, the app uses deterministic fallback analysis. Without Supabase credentials, the app runs normally and reports persistence as skipped.

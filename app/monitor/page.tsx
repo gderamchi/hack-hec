@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { PRODUCT_CONFIG } from "@/lib/app-config";
 import type {
   AssetAction,
   AssetImpact,
@@ -78,7 +79,7 @@ const REGULATION_PRESETS = [
     label: "PSD3 / PSR",
     subtitle: "Payment Services Directive",
     jurisdiction: "EU",
-    color: "border-violet-200 bg-violet-50 text-violet-700",
+    color: "border-teal-200 bg-teal-50 text-teal-700",
     text: `Payment service providers must implement strong customer authentication for all electronic payment transactions where the payer initiates a payment, unless specific exemptions apply. SCA must include at least two independent elements from the categories of knowledge, possession, and inherence, ensuring the breach of one does not compromise the others. Providers must verify the payee name before credit transfer execution and notify payers of any discrepancies. Receiving PSPs must detect and freeze suspicious incoming transactions. PSPs must offer customers spending limits and payment blocking controls. PSPs must provide access to human customer support and participate in alternative dispute resolution procedures when chosen by consumers. Failure to comply may result in fines or restrictions on operations.`
   },
   {
@@ -172,7 +173,7 @@ export default function MonitorPage() {
       <header className="sticky top-0 z-30 border-b border-slateLine bg-white/92 backdrop-blur">
         <div className="mx-auto flex max-w-[1560px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-600 text-white">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-600 text-white">
               <BrainCircuit className="h-5 w-5" />
             </span>
             <span>
@@ -193,7 +194,7 @@ export default function MonitorPage() {
             )}
             <Link
               href="/agent"
-              className="inline-flex items-center gap-2 rounded-lg bg-violet-50 text-violet-700 border border-violet-200 px-4 py-2 text-sm font-bold transition hover:bg-violet-100"
+              className="inline-flex items-center gap-2 rounded-lg bg-teal-50 text-teal-700 border border-teal-200 px-4 py-2 text-sm font-bold transition hover:bg-teal-100"
             >
               <Zap className="h-4 w-4" />
               Live Agent
@@ -202,7 +203,7 @@ export default function MonitorPage() {
               href="/"
               className="hidden lg:inline-flex items-center gap-2 rounded-lg border border-slateLine bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
             >
-              ← CompliancePilot
+              ← {PRODUCT_CONFIG.name}
             </Link>
           </div>
         </div>
@@ -225,13 +226,13 @@ export default function MonitorPage() {
                     key={step.id}
                     className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-xs font-semibold transition ${
                       isActive
-                        ? "border-violet-600 text-violet-700"
+                        ? "border-teal-600 text-teal-700"
                         : isDone
                         ? "border-transparent text-slate-500"
                         : "border-transparent text-slate-400"
                     }`}
                   >
-                    {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-violet-500" /> : step.icon}
+                    {isDone ? <CheckCircle2 className="h-3.5 w-3.5 text-teal-500" /> : step.icon}
                     {`${i + 1}. ${step.label}`}
                   </div>
                 );
@@ -307,7 +308,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
   return (
     <div className="mx-auto max-w-3xl space-y-5">
       <div className="mb-6">
-        <p className="text-sm font-semibold text-violet-600">Step 1</p>
+        <p className="text-sm font-semibold text-teal-600">Step 1</p>
         <h1 className="mt-1 text-3xl font-semibold">Define your company profile</h1>
         <p className="mt-2 text-sm leading-6 text-slate-600">
           This profile is the foundation of the propagation engine. Every regulatory change will be mapped
@@ -316,7 +317,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
       </div>
 
       {/* Company Identity */}
-      <Section icon={<Building2 className="h-4 w-4 text-violet-600" />} title="Company Identity">
+      <Section icon={<Building2 className="h-4 w-4 text-teal-600" />} title="Company Identity">
         <div className="grid gap-4 sm:grid-cols-3">
           <label className="block">
             <span className="text-xs font-semibold text-slate-600">Company name *</span>
@@ -324,7 +325,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
               id="company-name"
               value={model.companyName}
               onChange={(e) => onChange({ ...model, companyName: e.target.value })}
-              className="mt-1 w-full rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-violet-400 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-teal-400 focus:outline-none"
               placeholder="e.g. Payflow Ltd"
             />
           </label>
@@ -334,7 +335,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
               id="company-type"
               value={model.companyType}
               onChange={(e) => onChange({ ...model, companyType: e.target.value })}
-              className="mt-1 w-full rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-violet-400 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-teal-400 focus:outline-none"
             >
               {MONITOR_COMPANY_TYPES.map((t) => <option key={t}>{t}</option>)}
             </select>
@@ -345,7 +346,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
               id="company-country"
               value={model.country}
               onChange={(e) => onChange({ ...model, country: e.target.value })}
-              className="mt-1 w-full rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-violet-400 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-teal-400 focus:outline-none"
             >
               {MONITOR_COUNTRIES.map((c) => <option key={c}>{c}</option>)}
             </select>
@@ -354,7 +355,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
       </Section>
 
       {/* Regulated Services */}
-      <Section icon={<ShieldCheck className="h-4 w-4 text-violet-600" />} title="Regulated Services *">
+      <Section icon={<ShieldCheck className="h-4 w-4 text-teal-600" />} title="Regulated Services *">
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {MONITOR_SERVICES.map((s) => {
             const active = model.services.includes(s);
@@ -364,7 +365,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
                 type="button"
                 onClick={() => toggleService(s)}
                 className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-left text-sm transition ${
-                  active ? "border-violet-400 bg-violet-50 text-violet-700" : "border-slateLine bg-white text-slate-700 hover:border-slate-300"
+                  active ? "border-teal-400 bg-teal-50 text-teal-700" : "border-slateLine bg-white text-slate-700 hover:border-slate-300"
                 }`}
               >
                 <span>{s}</span>
@@ -376,7 +377,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
       </Section>
 
       {/* Tech Stack */}
-      <Section icon={<Cpu className="h-4 w-4 text-violet-600" />} title="Technology Stack">
+      <Section icon={<Cpu className="h-4 w-4 text-teal-600" />} title="Technology Stack">
         <p className="mb-2 text-xs text-slate-500">Type a technology and press Enter to add (e.g. AWS, Stripe, Kubernetes)</p>
         <TagInput
           id="tech-stack"
@@ -387,7 +388,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
       </Section>
 
       {/* Teams */}
-      <Section icon={<Users className="h-4 w-4 text-violet-600" />} title="Teams">
+      <Section icon={<Users className="h-4 w-4 text-teal-600" />} title="Teams">
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {ALL_TEAMS.map((t) => {
             const active = model.teams.includes(t);
@@ -397,7 +398,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
                 type="button"
                 onClick={() => toggleTeam(t)}
                 className={`flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition ${
-                  active ? "border-violet-400 bg-violet-50 text-violet-700" : "border-slateLine bg-white text-slate-700 hover:border-slate-300"
+                  active ? "border-teal-400 bg-teal-50 text-teal-700" : "border-slateLine bg-white text-slate-700 hover:border-slate-300"
                 }`}
               >
                 <span>{t}</span>
@@ -409,7 +410,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
       </Section>
 
       {/* Internal Assets */}
-      <Section icon={<ClipboardList className="h-4 w-4 text-violet-600" />} title="Internal Assets">
+      <Section icon={<ClipboardList className="h-4 w-4 text-teal-600" />} title="Internal Assets">
         <p className="mb-2 text-xs text-slate-500">
           Add your named policies, runbooks, contracts, systems, and processes. The engine maps regulatory
           obligations directly to these.
@@ -418,7 +419,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
       </Section>
 
       {/* Vendors */}
-      <Section icon={<Network className="h-4 w-4 text-violet-600" />} title="Key Vendors">
+      <Section icon={<Network className="h-4 w-4 text-teal-600" />} title="Key Vendors">
         <p className="mb-2 text-xs text-slate-500">Third-party ICT providers, payment processors, cloud providers (press Enter to add)</p>
         <TagInput
           id="vendors"
@@ -434,7 +435,7 @@ function SetupScreen({ model, onChange, onNext }: { model: OperatingModel; onCha
           type="button"
           onClick={handleContinue}
           disabled={!canContinue}
-          className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Continue to Regulation
           <ArrowRight className="h-4 w-4" />
@@ -464,7 +465,7 @@ function IntakeScreen({
   return (
     <div className="mx-auto max-w-3xl space-y-5">
       <div className="mb-6">
-        <p className="text-sm font-semibold text-violet-600">Step 2</p>
+        <p className="text-sm font-semibold text-teal-600">Step 2</p>
         <h1 className="mt-1 text-3xl font-semibold">Select or paste regulation</h1>
         <p className="mt-2 text-sm leading-6 text-slate-600">
           Choose a pre-loaded regulation excerpt or paste your own text. The propagation engine will map
@@ -479,7 +480,7 @@ function IntakeScreen({
           type="button"
           onClick={() => setMode("paste")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition ${
-            mode === "paste" ? "bg-violet-600 text-white" : "text-slate-600 hover:bg-slate-50"
+            mode === "paste" ? "bg-teal-600 text-white" : "text-slate-600 hover:bg-slate-50"
           }`}
         >
           <FileText className="h-4 w-4" /> Paste text
@@ -489,7 +490,7 @@ function IntakeScreen({
           type="button"
           onClick={() => setMode("preset")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition ${
-            mode === "preset" ? "bg-violet-600 text-white" : "text-slate-600 hover:bg-slate-50"
+            mode === "preset" ? "bg-teal-600 text-white" : "text-slate-600 hover:bg-slate-50"
           }`}
         >
           <Sparkles className="h-4 w-4" /> Use preset
@@ -504,7 +505,7 @@ function IntakeScreen({
             onChange={(e) => onChange(e.target.value)}
             rows={14}
             placeholder="Paste raw regulation text here (PSD3, DORA, EU AI Act, FCA Consumer Duty...)"
-            className="w-full resize-none rounded-lg border border-slateLine bg-slate-50 px-3 py-3 text-sm leading-6 placeholder:text-slate-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-100"
+            className="w-full resize-none rounded-lg border border-slateLine bg-slate-50 px-3 py-3 text-sm leading-6 placeholder:text-slate-400 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-100"
           />
         </div>
       ) : (
@@ -515,7 +516,7 @@ function IntakeScreen({
               type="button"
               id={`preset-${preset.id}`}
               onClick={() => { onChange(preset.text); setMode("paste"); }}
-              className={`rounded-xl border-2 p-4 text-left transition hover:shadow-md ${preset.color} ${text === preset.text ? "ring-2 ring-violet-500" : ""}`}
+              className={`rounded-xl border-2 p-4 text-left transition hover:shadow-md ${preset.color} ${text === preset.text ? "ring-2 ring-teal-500" : ""}`}
             >
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold">{preset.label}</span>
@@ -535,7 +536,7 @@ function IntakeScreen({
       )}
 
       {text && (
-        <div className="rounded-lg border border-violet-100 bg-violet-50 px-4 py-3 text-sm text-violet-800">
+        <div className="rounded-lg border border-teal-100 bg-teal-50 px-4 py-3 text-sm text-teal-800">
           <span className="font-semibold">Ready:</span> {text.split(" ").length} words loaded. The propagation engine will extract obligations and map them to your company.
         </div>
       )}
@@ -553,7 +554,7 @@ function IntakeScreen({
           type="button"
           onClick={onRun}
           disabled={!text.trim()}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <BrainCircuit className="h-4 w-4" />
           Run Propagation Engine
@@ -569,20 +570,20 @@ function IntakeScreen({
 function PropagatingScreen({ stepIndex, companyName }: { stepIndex: number; companyName: string }) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center">
-      <div className="w-full max-w-md rounded-2xl border border-violet-200 bg-gradient-to-b from-violet-50 to-white p-10 shadow-lg">
+      <div className="w-full max-w-md rounded-2xl border border-teal-200 bg-gradient-to-b from-teal-50 to-white p-10 shadow-lg">
         <div className="flex flex-col items-center text-center">
           <div className="relative">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-600">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-600">
               <BrainCircuit className="h-8 w-8 text-white" />
             </div>
             <span className="absolute -right-1 -top-1 flex h-4 w-4">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-75" />
-              <span className="relative inline-flex h-4 w-4 rounded-full bg-violet-600" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
+              <span className="relative inline-flex h-4 w-4 rounded-full bg-teal-600" />
             </span>
           </div>
-          <h2 className="mt-5 text-xl font-semibold text-violet-900">Propagating regulation</h2>
+          <h2 className="mt-5 text-xl font-semibold text-teal-900">Propagating regulation</h2>
           {companyName && (
-            <p className="mt-1 text-sm text-violet-600 font-medium">Mapping to {companyName}</p>
+            <p className="mt-1 text-sm text-teal-600 font-medium">Mapping to {companyName}</p>
           )}
           <p className="mt-1 text-xs text-slate-500">This usually takes 30–60 seconds</p>
         </div>
@@ -593,16 +594,16 @@ function PropagatingScreen({ stepIndex, companyName }: { stepIndex: number; comp
               key={step}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                 i === stepIndex
-                  ? "bg-violet-100 text-violet-800"
+                  ? "bg-teal-100 text-teal-800"
                   : i < stepIndex
                   ? "text-slate-500"
                   : "text-slate-300"
               }`}
             >
               {i < stepIndex ? (
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-violet-500" />
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-teal-500" />
               ) : i === stepIndex ? (
-                <Loader2 className="h-4 w-4 shrink-0 animate-spin text-violet-600" />
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin text-teal-600" />
               ) : (
                 <div className="h-4 w-4 shrink-0 rounded-full border-2 border-current" />
               )}
@@ -649,13 +650,13 @@ function ImpactScreen({
     <div className="space-y-6">
       {/* Hero Row */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-violet-200 bg-gradient-to-br from-violet-600 to-violet-700 p-5 text-white shadow-md lg:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-widest text-violet-200">Regulation analysed</p>
+        <div className="rounded-xl border border-teal-200 bg-gradient-to-br from-teal-600 to-teal-700 p-5 text-white shadow-md lg:col-span-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-teal-200">Regulation analysed</p>
           <h2 className="mt-1 text-xl font-bold">{regName || "Unknown Regulation"}</h2>
           {extraction?.jurisdiction && (
-            <p className="mt-1 text-sm text-violet-200">{extraction.jurisdiction}</p>
+            <p className="mt-1 text-sm text-teal-200">{extraction.jurisdiction}</p>
           )}
-          <p className="mt-3 text-sm text-violet-100 leading-6">
+          <p className="mt-3 text-sm text-teal-100 leading-6">
             {propagation?.summary || extraction?.summary || ""}
           </p>
         </div>
@@ -706,7 +707,7 @@ function ImpactScreen({
             type="button"
             onClick={() => setActiveTab(tab.id)}
             className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition ${
-              activeTab === tab.id ? "bg-violet-600 text-white shadow-sm" : "text-slate-600 hover:bg-slate-50"
+              activeTab === tab.id ? "bg-teal-600 text-white shadow-sm" : "text-slate-600 hover:bg-slate-50"
             }`}
           >
             {tab.icon}{tab.label}
@@ -726,8 +727,8 @@ function ImpactScreen({
                       <p className="font-semibold text-slate-800">{t.team}</p>
                       <p className="mt-1 text-xs text-slate-500">{t.obligation_count} obligation(s) assigned</p>
                     </div>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100">
-                      <Users className="h-4 w-4 text-violet-600" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-100">
+                      <Users className="h-4 w-4 text-teal-600" />
                     </span>
                   </div>
                   <p className="mt-3 text-sm leading-5 text-slate-600">{t.top_action}</p>
@@ -819,7 +820,7 @@ function ObligationCard({ propagation: p }: { propagation: ObligationPropagation
               <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Affected Teams</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {p.affected_teams.map((t) => (
-                  <span key={t} className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">{t}</span>
+                  <span key={t} className="rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-700">{t}</span>
                 ))}
               </div>
             </div>
@@ -838,7 +839,7 @@ function ObligationCard({ propagation: p }: { propagation: ObligationPropagation
               <ul className="mt-2 space-y-1.5">
                 {p.action_plan.map((a, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
-                    <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-500" />
+                    <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-teal-500" />
                     <span><span className="font-semibold">{a.team}:</span> {a.task} <span className="text-slate-400">· {a.deadline} · {a.effort} effort</span></span>
                   </li>
                 ))}
@@ -909,13 +910,13 @@ function ActionCard({ action }: { action: TeamAction }) {
   const effortColor = { high: "text-red-600", medium: "text-amber-600", low: "text-green-600" }[action.effort];
   return (
     <div className="flex items-start gap-4 rounded-lg border border-slateLine bg-white px-4 py-3 shadow-sm">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100">
-        <ClipboardList className="h-4 w-4 text-violet-600" />
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-100">
+        <ClipboardList className="h-4 w-4 text-teal-600" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-slate-800">{action.task}</p>
         <p className="mt-1 text-xs text-slate-500">
-          <span className="font-semibold text-violet-700">{action.team}</span>
+          <span className="font-semibold text-teal-700">{action.team}</span>
           <span className="mx-2">·</span>
           <span>{action.deadline}</span>
           <span className="mx-2">·</span>
@@ -965,7 +966,7 @@ function TagInput({ id, tags, onChange, placeholder }: { id: string; tags: strin
   return (
     <div className="flex flex-wrap gap-2 rounded-lg border border-slateLine bg-slate-50 p-2.5">
       {tags.map((tag) => (
-        <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-semibold text-violet-700">
+        <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-2.5 py-1 text-xs font-semibold text-teal-700">
           {tag}
           <button type="button" onClick={() => onChange(tags.filter((t) => t !== tag))}>
             <X className="h-3 w-3" />
@@ -999,7 +1000,7 @@ function AssetBuilder({ assets, onChange }: { assets: InternalAsset[]; onChange:
     policy: "bg-blue-100 text-blue-700",
     runbook: "bg-amber-100 text-amber-700",
     contract: "bg-green-100 text-green-700",
-    system: "bg-purple-100 text-purple-700",
+    system: "bg-slate-100 text-slate-700",
     process: "bg-slate-100 text-slate-600"
   };
 
@@ -1023,12 +1024,12 @@ function AssetBuilder({ assets, onChange }: { assets: InternalAsset[]; onChange:
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addAsset()}
           placeholder="Asset name (e.g. Incident Response Runbook)"
-          className="min-w-0 flex-1 rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-violet-400 focus:outline-none"
+          className="min-w-0 flex-1 rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-teal-400 focus:outline-none"
         />
         <select
           value={type}
           onChange={(e) => setType(e.target.value as InternalAssetType)}
-          className="rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-violet-400 focus:outline-none"
+          className="rounded-lg border border-slateLine bg-white px-3 py-2 text-sm focus:border-teal-400 focus:outline-none"
         >
           {(Object.entries(ASSET_TYPE_LABELS) as [InternalAssetType, string][]).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
@@ -1037,7 +1038,7 @@ function AssetBuilder({ assets, onChange }: { assets: InternalAsset[]; onChange:
         <button
           type="button"
           onClick={addAsset}
-          className="flex items-center gap-1 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-700"
+          className="flex items-center gap-1 rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-700"
         >
           <Plus className="h-4 w-4" /> Add
         </button>

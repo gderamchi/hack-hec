@@ -1,6 +1,10 @@
 import { strict as assert } from "node:assert";
 import { applyEvidenceGate } from "@/lib/evidence-gate";
 import { runFallbackAnalysis } from "@/lib/fallback-analyzer";
+import {
+  activeRegulationsForProfile,
+  mapCompanyProfileToOperatingModel
+} from "@/lib/profile-mapper";
 import { getRelevantRequirements } from "@/lib/requirement-scope";
 import type { CompanyProfile, UploadedDocument } from "@/lib/types";
 
@@ -59,10 +63,40 @@ assert.equal(
   "Mapped Complee requirements must not become Covered without source evidence."
 );
 
+const operatingModel = mapCompanyProfileToOperatingModel(profile);
+assert.equal(operatingModel.companyName, profile.companyName);
+assert.equal(operatingModel.companyType, "Payment Institution");
+assert.equal(operatingModel.country, "United Kingdom");
+assert.ok(
+  operatingModel.services.includes("Payment initiation"),
+  "Expected selected service to seed the Live Agent operating model."
+);
+assert.ok(
+  operatingModel.teams.includes("Engineering"),
+  "Expected technical payment services to add Engineering to the Live Agent profile."
+);
+assert.ok(
+  operatingModel.internalAssets.some((asset) => asset.name.includes("Expansion Evidence Pack")),
+  "Expected cross-border profiles to add an expansion evidence pack asset."
+);
+assert.deepEqual(activeRegulationsForProfile(profile), [
+  "DORA",
+  "PSD3/PSR",
+  "FCA Consumer Duty"
+]);
+
 console.log(
   JSON.stringify(
     {
       mappedCompleeRequirements: compleeRequirements.map((requirement) => requirement.id),
+      operatingModel: {
+        companyName: operatingModel.companyName,
+        companyType: operatingModel.companyType,
+        country: operatingModel.country,
+        services: operatingModel.services,
+        teams: operatingModel.teams,
+        activeRegulations: activeRegulationsForProfile(profile)
+      },
       compleeRows: compleeRows.map((row) => ({
         requirementId: row.requirementId,
         status: row.status,

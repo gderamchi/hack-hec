@@ -4,8 +4,14 @@
 
 :root {
   color-scheme: light;
-  --background: #fbf7ff;
+  --background: #f8faf7;
   --foreground: #101828;
+  --card: #ffffff;
+  --border: #dfe7e3;
+  --navy: #0a1f44;
+  --brand: #2f5bff;
+  --brand-soft: #e9eeff;
+  --muted-foreground: #5c6a66;
 }
 
 * {
@@ -80,4 +86,26 @@ textarea:focus-visible {
   .print-break {
     break-inside: avoid;
   }
+}
+
+.complee-grid-bg {
+  background-image: radial-gradient(circle at 1px 1px, rgba(128, 146, 160, 0.45) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.fluid-h1 {
+  font-size: clamp(2.5rem, 1.45rem + 4vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.fluid-h2 {
+  font-size: clamp(1.65rem, 1.15rem + 1.5vw, 2.55rem);
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+
+.fluid-lead {
+  font-size: clamp(1rem, 0.9rem + 0.45vw, 1.2rem);
+  line-height: 1.55;
 }

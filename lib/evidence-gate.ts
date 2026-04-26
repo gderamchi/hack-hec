@@ -63,6 +63,9 @@ const EXPECTED_ONLY_CONTEXT_PATTERNS = [
   /\bexpected evidence\b/i,
   /\brequired evidence\b/i,
   /\bevidence required\b/i,
+  /\brequired document pack\b/i,
+  /\bdocument keywords\b/i,
+  /\brequirement ids\b/i,
   /\bminimum documents\b/i,
   /\brequested from\b/i
 ];
@@ -441,9 +444,13 @@ function classifyEvidence(
   index: number,
   excerpt: string
 ): EvidenceType {
-  const context = content.slice(Math.max(0, index - 320), index + 320);
+  const expectedOnlyContext = content.slice(Math.max(0, index - 1200), index + 320);
 
-  if (EXPECTED_ONLY_CONTEXT_PATTERNS.some((pattern) => pattern.test(context))) {
+  if (
+    EXPECTED_ONLY_CONTEXT_PATTERNS.some((pattern) =>
+      pattern.test(expectedOnlyContext)
+    )
+  ) {
     return "demo_placeholder";
   }
 

@@ -24,6 +24,7 @@ import type {
   PlanWithEvent,
   RegChangeStatus
 } from "@/lib/agent-types";
+import { PRODUCT_CONFIG } from "@/lib/app-config";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -32,7 +33,7 @@ const POLL_INTERVAL_MS = 30_000;
 
 const SIMULATION_OPTIONS = [
   { label: "DORA Amendment", value: "DORA", color: "text-blue-700 bg-blue-50 border-blue-200" },
-  { label: "PSD3/PSR Update", value: "PSD3/PSR", color: "text-violet-700 bg-violet-50 border-violet-200" },
+  { label: "PSD3/PSR Update", value: "PSD3/PSR", color: "text-teal-700 bg-teal-50 border-teal-200" },
   { label: "EU AI Act Revision", value: "EU AI Act", color: "text-amber-700 bg-amber-50 border-amber-200" },
   { label: "FCA Consumer Duty", value: "FCA Consumer Duty", color: "text-green-700 bg-green-50 border-green-200" }
 ];
@@ -58,7 +59,7 @@ function statusConfig(status: RegChangeStatus | "monitoring") {
 
 function activityIcon(type: string) {
   if (type === "plan_accepted") return <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />;
-  if (type === "plan_generated") return <Sparkles className="h-4 w-4 text-violet-500 shrink-0" />;
+  if (type === "plan_generated") return <Sparkles className="h-4 w-4 text-teal-500 shrink-0" />;
   if (type === "change_detected") return <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />;
   if (type === "irrelevant_filtered") return <ShieldCheck className="h-4 w-4 text-slate-400 shrink-0" />;
   if (type === "error") return <ShieldAlert className="h-4 w-4 text-red-500 shrink-0" />;
@@ -67,6 +68,15 @@ function activityIcon(type: string) {
 
 function fmtTime(iso: string) {
   return new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
+async function parseAgentError(response: Response | null) {
+  if (!response) return "Scan request failed. The agent will retry.";
+  const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+  if (payload?.error?.includes("OPENAI_API_KEY")) {
+    return "Live Agent profile loaded. Configure OPENAI_API_KEY to run scans and simulations.";
+  }
+  return payload?.error ?? "Scan failed. The agent will retry.";
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
@@ -116,7 +126,7 @@ export default function AgentPage() {
       setScanMessage(data.message ?? "Scan complete");
       await loadPlans(profileId);
     } else {
-      setScanMessage("Scan failed — will retry");
+      setScanMessage(await parseAgentError(res));
     }
   }, [loadPlans]);
 
@@ -140,7 +150,7 @@ export default function AgentPage() {
       setScanMessage(data.message);
       await loadPlans(profile.id);
     } else {
-      setScanMessage("Simulation failed — check server logs");
+      setScanMessage(await parseAgentError(res));
     }
   }
 
@@ -178,12 +188,12 @@ export default function AgentPage() {
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/92 backdrop-blur">
         <div className="mx-auto flex max-w-[1560px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-violet-600 text-white">
-              <span className="text-[10px]">CP</span>
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-teal-600 text-white">
+              <span className="text-[10px]">{PRODUCT_CONFIG.shortName.slice(0, 2).toUpperCase()}</span>
             </div>
-            CompliancePilot
+            {PRODUCT_CONFIG.name}
             <span className="mx-2 text-slate-300">/</span>
-            <span className="text-violet-600 flex items-center gap-1.5"><Zap className="h-4 w-4"/> AI Agent</span>
+            <span className="text-teal-600 flex items-center gap-1.5"><Zap className="h-4 w-4"/> AI Agent</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -219,7 +229,7 @@ export default function AgentPage() {
         {!profile ? (
           <div className="mx-auto mt-10 max-w-xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
                 <BrainCircuit className="h-5 w-5" />
               </span>
               <div>
@@ -235,7 +245,7 @@ export default function AgentPage() {
                   id="agent-setup-name"
                   type="text" 
                   placeholder="e.g. Payflow Ltd"
-                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500" 
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" 
                 />
               </div>
               <button
@@ -264,7 +274,7 @@ export default function AgentPage() {
                     await runScan(profile.id);
                   }
                 }}
-                className="w-full rounded-lg bg-violet-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-violet-700"
+                className="w-full rounded-lg bg-teal-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-teal-700"
               >
                 Initialize Agent
               </button>
@@ -278,7 +288,7 @@ export default function AgentPage() {
                 { label: "Regulations Monitored", value: ACTIVE_REGULATIONS.length, icon: <ShieldCheck className="h-4 w-4 text-blue-500" />, shadow: "shadow-sm border-slate-200/60" },
                 { label: "Pending Review", value: pendingPlans.length, icon: <AlertTriangle className="h-4 w-4 text-amber-500" />, shadow: pendingPlans.length > 0 ? "border-amber-200 bg-amber-50 shadow-sm" : "shadow-sm border-slate-200/60" },
                 { label: "In Baseline", value: acceptedCount, icon: <CheckCircle2 className="h-4 w-4 text-green-500" />, shadow: "shadow-sm border-slate-200/60" },
-                { label: "Changes Detected", value: totalDetected, icon: <Activity className="h-4 w-4 text-violet-500" />, shadow: "shadow-sm border-slate-200/60" },
+                { label: "Changes Detected", value: totalDetected, icon: <Activity className="h-4 w-4 text-teal-500" />, shadow: "shadow-sm border-slate-200/60" },
               ].map(kpi => (
                 <div key={kpi.label} className={`rounded-xl bg-white border p-4 ${kpi.shadow}`}>
                   <div className="flex items-center justify-between">
@@ -400,7 +410,7 @@ export default function AgentPage() {
                             </div>
                             <Link
                               href={`/agent/plan/${plan.id}`}
-                              className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-bold text-white shadow hover:bg-violet-700 transition"
+                              className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-bold text-white shadow hover:bg-teal-700 transition"
                             >
                               Review Plan
                               <ArrowRight className="h-4 w-4" />
@@ -414,12 +424,12 @@ export default function AgentPage() {
 
                 {/* Simulate Panel */}
                 {profile && (
-                  <div className="mt-8 rounded-2xl border border-violet-100 bg-violet-50 p-6">
+                  <div className="mt-8 rounded-2xl border border-teal-100 bg-teal-50 p-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <Zap className="h-5 w-5 text-violet-600" />
-                      <h3 className="text-base font-bold text-violet-900">Simulate a Change</h3>
+                      <Zap className="h-5 w-5 text-teal-600" />
+                      <h3 className="text-base font-bold text-teal-900">Simulate a Change</h3>
                     </div>
-                    <p className="text-sm font-medium text-violet-700/80 mb-5 leading-relaxed">
+                    <p className="text-sm font-medium text-teal-700/80 mb-5 leading-relaxed">
                       Testing the agent? Inject a mock amendment text through the full AI pipeline. The agent will read it, extract obligations, score relevance to {profile.company_name}, and build a plan.
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2">
@@ -430,18 +440,18 @@ export default function AgentPage() {
                           onClick={() => simulate(opt.value)}
                           disabled={agentStatus !== "idle" || !profile}
                           className={`flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-sm font-bold shadow-sm transition hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 ${
-                            simulating === opt.value ? "border-violet-400 ring-2 ring-violet-400 ring-offset-2" : "border-slate-200"
+                            simulating === opt.value ? "border-teal-400 ring-2 ring-teal-400 ring-offset-2" : "border-slate-200"
                           }`}
                         >
                           {simulating === opt.value ? (
-                            <span className="flex items-center gap-2 text-violet-600">
+                            <span className="flex items-center gap-2 text-teal-600">
                               <Loader2 className="h-4 w-4 animate-spin" />
                               Running AI...
                             </span>
                           ) : (
                             <>
                               <span className="text-slate-700">{opt.label}</span>
-                              <Sparkles className="h-4 w-4 text-violet-400" />
+                              <Sparkles className="h-4 w-4 text-teal-400" />
                             </>
                           )}
                         </button>
@@ -491,8 +501,8 @@ export default function AgentPage() {
                     )}
                     {agentStatus !== "idle" && (
                       <div className="flex items-start gap-3 opacity-70">
-                        <div className="mt-0.5"><Loader2 className="h-4 w-4 animate-spin text-violet-500" /></div>
-                        <p className="text-xs text-violet-600 animate-pulse font-semibold">{scanMessage}</p>
+                        <div className="mt-0.5"><Loader2 className="h-4 w-4 animate-spin text-teal-500" /></div>
+                        <p className="text-xs text-teal-600 animate-pulse font-semibold">{scanMessage}</p>
                       </div>
                     )}
                   </div>

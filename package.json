@@ -13,6 +13,7 @@
     "test:pdf-extract": "node -r tsconfig-paths/register -r sucrase/register scripts/pdf-extract-regression.ts",
     "test:complex": "node -r tsconfig-paths/register -r sucrase/register scripts/complex-usecase-regression.ts",
     "test:complex:prod": "COMPLEX_E2E_TARGET=prod node -r tsconfig-paths/register -r sucrase/register scripts/complex-usecase-regression.ts",
+    "test:e2e:local": "node -r tsconfig-paths/register -r sucrase/register scripts/local-e2e-regression.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
