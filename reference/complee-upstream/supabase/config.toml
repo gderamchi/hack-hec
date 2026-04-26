@@ -1,0 +1,7 @@
+project_id = "yuciamugctlucakoarbf"
+
+[functions.assistant-chat]
+verify_jwt = false
+
+[functions.analyze-policy]
+verify_jwt = false

@@ -29,14 +29,24 @@ import {
 import { PSD3_PSR_REQUIREMENTS } from "@/data/psd3-psr-requirements";
 import { PRODUCT_CONFIG } from "@/lib/app-config";
 import {
+  getCompleeExpansionRequirements,
+  getHomeCountry,
+  getTargetCountry,
+  isCrossBorderProfile
+} from "@/lib/complee-requirement-mapper";
+import {
+  ASSESSMENT_MODES,
   COMPANY_TYPES,
   COUNTRIES,
   EMPTY_COMPANY_PROFILE,
   DISCLAIMER,
+  INSTITUTION_TYPES,
   SERVICES,
+  type AssessmentMode,
   type AnalysisResult,
   type CompanyProfile,
   type EvidenceMatrixItem,
+  type InstitutionType,
   type Priority,
   type RequirementStatus,
   type ServiceFlow,
@@ -64,6 +74,43 @@ const FIELD_CONTROL_CLASS =
 
 const OUTLINE_BUTTON_CLASS =
   "inline-flex items-center justify-center gap-2 rounded-lg border border-slateLine bg-surface px-4 py-2.5 text-sm font-semibold text-mutedInk shadow-sm transition hover:border-muted hover:bg-surfaceMuted";
+
+const MODE_LABELS: Record<AssessmentMode, { title: string; description: string }> = {
+  cross_border: {
+    title: "Cross-border expansion pack",
+    description:
+      "Complee-style market entry, local regulator gaps, PSD3/PSR evidence checks and submission roadmap."
+  },
+  psd3_psr: {
+    title: "PSD3/PSR readiness",
+    description:
+      "Focused evidence-gated readiness matrix for EU payment services, fraud, SCA and open banking controls."
+  }
+};
+
+const DASHBOARD_WORKSPACES = [
+  {
+    name: "FlowPay UK expansion",
+    mode: "Cross-border",
+    target: "France -> United Kingdom",
+    status: "Evidence needed",
+    score: "42%"
+  },
+  {
+    name: "Atlas PSD3 remediation",
+    mode: "PSD3/PSR",
+    target: "France",
+    status: "Backlog ready",
+    score: "68%"
+  },
+  {
+    name: "Helio Open Banking",
+    mode: "PSD3/PSR",
+    target: "Netherlands",
+    status: "Reviewer later",
+    score: "55%"
+  }
+];
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("landing");
@@ -139,6 +186,15 @@ export default function Home() {
 
     if (companyProfile.services.length === 0) {
       setError("Select at least one service or flow before running the assessment.");
+      setScreen("scope");
+      return;
+    }
+
+    if (
+      isCrossBorderProfile(companyProfile) &&
+      getHomeCountry(companyProfile) === getTargetCountry(companyProfile)
+    ) {
+      setError("Choose a different target country for a cross-border expansion assessment.");
       setScreen("scope");
       return;
     }
@@ -263,6 +319,7 @@ export default function Home() {
 
             {screen === "documents" ? (
               <DocumentsStep
+                profile={companyProfile}
                 documents={documents}
                 isExtractingDocuments={isExtractingDocuments}
                 documentCheck={documentCheck}
@@ -279,6 +336,7 @@ export default function Home() {
 
             {screen === "processing" ? (
               <ProcessingStep
+                profile={companyProfile}
                 currentIndex={processingIndex}
                 isAnalyzing={isAnalyzing}
                 documentCount={documents.length}
@@ -292,6 +350,9 @@ export default function Home() {
                 profile={companyProfile}
                 onSelectItem={setSelectedItem}
                 onDownloadCsv={() => downloadCsv(result)}
+                onDownloadSubmissionPack={() =>
+                  downloadSubmissionPack(result, companyProfile, documents)
+                }
                 onOpenReport={() => setReportOpen(true)}
                 onReset={resetAssessment}
               />
@@ -368,16 +429,16 @@ function AppHeader({
         <button
           type="button"
           onClick={onStart}
-          aria-label="Start review"
+          aria-label="Create workspace"
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-ink sm:px-4"
         >
           <Play className="h-4 w-4" aria-hidden="true" />
-          <span className="whitespace-nowrap sm:hidden">Start</span>
-          <span className="hidden whitespace-nowrap sm:inline">Start review</span>
+          <span className="whitespace-nowrap sm:hidden">New</span>
+          <span className="hidden whitespace-nowrap sm:inline">New workspace</span>
         </button>
       </div>
       <div className="hidden border-t border-primary/10 bg-primary px-4 py-3 text-center text-sm font-medium text-white sm:block">
-        PSD3/PSR evidence, scope, and remediation backlog in one audit-ready workflow
+        Cross-border expansion, PSD3/PSR evidence and submission readiness in one workspace
       </div>
     </header>
   );
@@ -385,153 +446,158 @@ function AppHeader({
 
 function Landing({ onStart }: { onStart: () => void }) {
   return (
-    <section className="mx-auto grid min-h-[calc(100vh-112px)] max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.84fr_1.16fr] lg:px-8">
-      <div className="max-w-2xl">
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-slateLine bg-surface px-3 py-1.5 text-xs font-semibold text-mutedInk shadow-sm">
-          <ShieldCheck className="h-4 w-4 text-regBlue" aria-hidden="true" />
-          Built for European payment fintechs
-        </div>
-        <h1 className="display-serif text-4xl font-normal leading-[0.98] text-ink sm:text-6xl lg:text-7xl">
-          PSD3/PSR readiness in minutes, not weeks.
-        </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-mutedInk">
-          {PRODUCT_CONFIG.name} turns payment flows, fraud policies, SCA evidence and
-          open banking APIs into a source-backed readiness matrix and remediation backlog.
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-ink"
-          >
-            Start assessment
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <a
-            href="#how-it-works"
-            className="inline-flex items-center justify-center rounded-lg border border-slateLine bg-surface px-5 py-3 text-sm font-semibold text-mutedInk transition hover:border-muted"
-          >
-            See workflow
-          </a>
+    <section className="mx-auto grid min-h-[calc(100vh-112px)] max-w-[1560px] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[270px_1fr] lg:px-8">
+      <aside className="rounded-lg border border-slateLine bg-surface p-4 shadow-panel">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+              Workspaces
+            </p>
+            <h1 className="display-serif mt-1 text-3xl font-normal">{PRODUCT_CONFIG.name}</h1>
+          </div>
+          <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-white">
+            <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+          </span>
         </div>
 
-        <div className="mt-10 hidden gap-3 sm:grid sm:grid-cols-3">
-          <ProofPoint label="Matrix" value={`${PSD3_PSR_REQUIREMENTS.length} controls`} />
-          <ProofPoint label="Fallback" value="No AI key needed" />
-          <ProofPoint label="Output" value="Board report" />
+        <div className="flex flex-col gap-3">
+          {DASHBOARD_WORKSPACES.map((workspace, index) => (
+            <button
+              key={workspace.name}
+              type="button"
+              className={`rounded-lg border p-3 text-left transition ${
+                index === 0
+                  ? "border-regBlue bg-primarySoft text-primary"
+                  : "border-slateLine bg-surface text-mutedInk hover:border-muted"
+              }`}
+            >
+              <span className="block text-sm font-semibold">{workspace.name}</span>
+              <span className="mt-1 block text-xs">{workspace.target}</span>
+              <span className="mt-3 flex items-center justify-between text-xs font-semibold">
+                <span>{workspace.mode}</span>
+                <span>{workspace.score}</span>
+              </span>
+            </button>
+          ))}
         </div>
-      </div>
 
-      <div className="overflow-hidden rounded-lg border border-slateLine bg-surface shadow-panel">
-        <div className="flex min-h-[390px] bg-surface sm:min-h-[470px]">
-          <aside className="hidden w-32 shrink-0 border-r border-slateLine bg-surfaceMuted/80 p-4 sm:block">
-            <div className="mb-6 h-2.5 w-20 rounded-full bg-primary" />
-            <div className="flex flex-col gap-3">
-              {["Overview", "Evidence", "Controls", "Tasks", "Sources"].map((item, index) => (
-                <div
-                  key={item}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold ${
-                    index === 0 ? "bg-primary text-white" : "bg-surface text-mutedInk"
-                  }`}
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          </aside>
-          <div className="min-w-0 flex-1 p-4 sm:p-5">
-            <div className="flex items-start justify-between gap-4 border-b border-slateLine pb-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
-                  Flowpay workspace
-                </p>
-                <h2 className="mt-1 text-xl font-semibold">Readiness command center</h2>
+        <button
+          type="button"
+          onClick={onStart}
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-ink"
+        >
+          New workspace
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </aside>
+
+      <div className="flex flex-col gap-6">
+        <Panel className="overflow-hidden">
+          <div className="grid gap-6 xl:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <p className="text-sm font-semibold text-regBlue">Unified platform</p>
+              <h2 className="display-serif mt-2 text-4xl font-normal leading-tight sm:text-5xl">
+                Expansion readiness, evidence checks and submission prep in one place.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-mutedInk">
+                Complee now combines the upstream cross-border workspace idea with the
+                current evidence-gated PSD3/PSR analyzer. Regulatory expectations seed the
+                matrix, but uploaded proof decides coverage.
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <ProofPoint label="PSD3/PSR base" value={`${PSD3_PSR_REQUIREMENTS.length} controls`} />
+                <ProofPoint
+                  label="Expansion seeds"
+                  value={`${getCompleeExpansionRequirements(EMPTY_COMPANY_PROFILE).length} UK rows`}
+                />
+                <ProofPoint label="Gate" value="Evidence first" />
               </div>
-              <StatusBadge status="Partially covered" />
             </div>
 
-            <div className="grid grid-cols-2 gap-3 py-5 sm:grid-cols-4">
-              <MetricCard label="Analyzed" value="14" tone="blue" />
-              <MetricCard label="Covered" value="2" tone="green" />
-              <MetricCard label="Partial" value="7" tone="amber" />
-              <MetricCard label="No evidence" value="2" tone="red" />
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-[1fr_0.82fr]">
-              <div className="overflow-hidden rounded-lg border border-slateLine bg-surface">
-                <div className="flex items-center justify-between border-b border-slateLine bg-surfaceMuted px-4 py-3">
-                  <p className="text-sm font-semibold">Control evidence map</p>
-                  <span className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-mutedInk">
-                    Live
-                  </span>
+            <div className="rounded-lg border border-slateLine bg-surfaceMuted/55 p-4">
+              <div className="flex flex-col gap-3 border-b border-slateLine pb-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+                    FlowPay UK expansion
+                  </p>
+                  <h3 className="mt-1 text-xl font-semibold">Readiness command center</h3>
                 </div>
-                {[
-                  ["Payee Verification", "Not evidenced"],
-                  ["Customer Warning Flows", "Not evidenced"],
-                  ["Open Banking Consent", "Partially covered"],
-                  ["SCA Fallback / Exemptions", "Needs human review"]
-                ].map(([domain, status]) => (
-                  <div
-                    key={domain}
-                    className="grid grid-cols-[1fr_auto] gap-3 border-b border-slateLine px-4 py-3 text-sm last:border-b-0"
-                  >
-                    <span className="font-medium">{domain}</span>
-                    <StatusBadge status={status as RequirementStatus} />
+                <StatusBadge status="Partially covered" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 py-4 sm:grid-cols-4">
+                <MetricCard label="Sources" value="2" tone="blue" />
+                <MetricCard label="Covered" value="0" tone="green" />
+                <MetricCard label="Partial" value="4" tone="amber" />
+                <MetricCard label="No evidence" value="8" tone="red" />
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-[1fr_0.86fr]">
+                <div className="overflow-hidden rounded-lg border border-slateLine bg-surface">
+                  <div className="flex items-center justify-between border-b border-slateLine bg-surfaceMuted px-4 py-3">
+                    <p className="text-sm font-semibold">Evidence-gated matrix</p>
+                    <span className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-mutedInk">
+                      Live path
+                    </span>
                   </div>
-                ))}
-              </div>
-
-              <div className="rounded-lg border border-slateLine bg-primarySoft/50 p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold">Board report</p>
-                  <FileDown className="h-4 w-4 text-regBlue" aria-hidden="true" />
-                </div>
-                <div className="mt-5 flex flex-col gap-4">
                   {[
-                    ["Scope locked", "90%"],
-                    ["Evidence parsed", "74%"],
-                    ["Backlog ready", "58%"]
-                  ].map(([label, value]) => (
-                    <div key={label}>
-                      <div className="mb-2 flex items-center justify-between text-xs font-semibold text-mutedInk">
-                        <span>{label}</span>
-                        <span>{value}</span>
-                      </div>
-                      <div className="h-2 rounded-full bg-surface">
-                        <div
-                          className="h-2 rounded-full bg-primary"
-                          style={{ width: value }}
-                        />
-                      </div>
+                    ["FCA Expansion", "CASS 15 reconciliation", "Not evidenced"],
+                    ["FCA Expansion", "Consumer Duty outcomes", "Partially covered"],
+                    ["Payee Verification", "Name matching flow", "Not evidenced"],
+                    ["Strong Customer Authentication", "Fallback and accessibility", "Needs human review"]
+                  ].map(([domain, title, status]) => (
+                    <div
+                      key={`${domain}-${title}`}
+                      className="grid grid-cols-[1fr_auto] gap-3 border-b border-slateLine px-4 py-3 text-sm last:border-b-0"
+                    >
+                      <span>
+                        <span className="block font-medium">{title}</span>
+                        <span className="text-xs text-muted">{domain}</span>
+                      </span>
+                      <StatusBadge status={status as RequirementStatus} />
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 rounded-lg border border-slateLine bg-surface p-3 text-xs leading-5 text-mutedInk">
-                  The AI output separates product gaps, compliance owner tasks and
-                  evidence required for sign-off.
+
+                <div className="rounded-lg border border-slateLine bg-primarySoft/55 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold">Submission pack v1</p>
+                    <FileDown className="h-4 w-4 text-regBlue" aria-hidden="true" />
+                  </div>
+                  <div className="mt-4 flex flex-col gap-3">
+                    {[
+                      ["Cover letter", "Ready after analysis"],
+                      ["Requirement checklist", "Evidence-gated"],
+                      ["Roadmap", "Owner + deadline"],
+                      ["Reviewer portal", "Queued"]
+                    ].map(([label, value]) => (
+                      <div key={label} className="rounded-lg border border-slateLine bg-surface p-3">
+                        <p className="text-sm font-semibold">{label}</p>
+                        <p className="mt-1 text-xs text-mutedInk">{value}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </Panel>
 
-      <div id="how-it-works" className="lg:col-span-2">
         <div className="grid gap-4 md:grid-cols-3">
           <FeatureCard
-            icon={<FileText className="h-5 w-5" aria-hidden="true" />}
-            title="Analyze documents"
-            text="Upload PDF, text and Markdown evidence required by the selected services."
+            icon={<Building2 className="h-5 w-5" aria-hidden="true" />}
+            title="Scope workspace"
+            text="Choose PSD3/PSR readiness or cross-border expansion with home and target country context."
           />
           <FeatureCard
             icon={<Search className="h-5 w-5" aria-hidden="true" />}
-            title="Extract evidence"
-            text="Map evidence to source-backed PSD3/PSR controls with confidence."
+            title="Gate evidence"
+            text="Upload policy, operational and audit evidence; source expectations alone never mark coverage."
           />
           <FeatureCard
             icon={<ClipboardList className="h-5 w-5" aria-hidden="true" />}
-            title="Create backlog"
-            text="Generate product, compliance and engineering tasks for the top gaps."
+            title="Package output"
+            text="Generate a matrix, remediation backlog, board report and submission-pack data export."
           />
         </div>
       </div>
@@ -552,7 +618,15 @@ function CompanyScopeStep({
   onToggleService: (service: ServiceFlow) => void;
   onNext: () => void;
 }) {
-  const canContinue = profile.companyName.trim().length > 0 && profile.services.length > 0;
+  const assessmentMode = profile.assessmentMode ?? "psd3_psr";
+  const crossBorder = assessmentMode === "cross_border";
+  const homeCountry = getHomeCountry(profile);
+  const targetCountry = getTargetCountry(profile);
+  const expansionRequirements = getCompleeExpansionRequirements(profile);
+  const canContinue =
+    profile.companyName.trim().length > 0 &&
+    profile.services.length > 0 &&
+    (!crossBorder || homeCountry !== targetCountry);
 
   return (
     <Panel>
@@ -560,11 +634,11 @@ function CompanyScopeStep({
         <div>
           <p className="text-sm font-semibold text-regBlue">Step 1</p>
           <h1 className="display-serif mt-1 text-4xl font-normal leading-tight">
-            Tell us about your payment fintech
+            Create a compliance workspace
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-mutedInk">
-            Select the regulated entity type and every payment service that should drive the
-            compliance scope and required evidence pack.
+            Select the platform mode, regulated entity type and every payment service that
+            should drive the evidence pack.
           </p>
         </div>
         <span className="hidden size-12 items-center justify-center rounded-lg bg-primarySoft text-regBlue sm:flex">
@@ -578,7 +652,39 @@ function CompanyScopeStep({
         </div>
       ) : null}
 
-      <div className="grid gap-5 py-6 md:grid-cols-2">
+      <div className="grid gap-3 py-6 md:grid-cols-2">
+        {ASSESSMENT_MODES.map((mode) => {
+          const selected = assessmentMode === mode;
+          return (
+            <button
+              key={mode}
+              type="button"
+              onClick={() =>
+                onChange({
+                  ...profile,
+                  assessmentMode: mode,
+                  targetCountry:
+                    mode === "cross_border"
+                      ? profile.targetCountry ?? "United Kingdom"
+                      : profile.country
+                })
+              }
+              className={`rounded-lg border p-4 text-left shadow-sm transition ${
+                selected
+                  ? "border-regBlue bg-primarySoft text-primary"
+                  : "border-slateLine bg-surface text-mutedInk hover:border-muted"
+              }`}
+            >
+              <span className="text-sm font-semibold">{MODE_LABELS[mode].title}</span>
+              <span className="mt-2 block text-sm leading-6">
+                {MODE_LABELS[mode].description}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-5 border-t border-slateLine py-6 md:grid-cols-2">
         <label className="block">
           <span className="text-sm font-semibold">Company name</span>
           <input
@@ -609,14 +715,42 @@ function CompanyScopeStep({
           </select>
         </label>
 
+        {crossBorder ? (
+          <label className="block">
+            <span className="text-sm font-semibold">Institution type</span>
+            <select
+              value={profile.institutionType ?? "PI"}
+              onChange={(event) =>
+                onChange({
+                  ...profile,
+                  institutionType: event.target.value as InstitutionType,
+                  companyType: companyTypeForInstitution(
+                    event.target.value as InstitutionType
+                  )
+                })
+              }
+              className={FIELD_CONTROL_CLASS}
+            >
+              {INSTITUTION_TYPES.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+
         <label className="block">
-          <span className="text-sm font-semibold">Country</span>
+          <span className="text-sm font-semibold">
+            {crossBorder ? "Home country" : "Country"}
+          </span>
           <select
-            value={profile.country}
+            value={crossBorder ? homeCountry : profile.country}
             onChange={(event) =>
               onChange({
                 ...profile,
-                country: event.target.value as CompanyProfile["country"]
+                country: crossBorder
+                  ? profile.country
+                  : (event.target.value as CompanyProfile["country"]),
+                homeCountry: event.target.value as CompanyProfile["country"]
               })
             }
             className={FIELD_CONTROL_CLASS}
@@ -627,11 +761,42 @@ function CompanyScopeStep({
           </select>
         </label>
 
+        {crossBorder ? (
+          <label className="block">
+            <span className="text-sm font-semibold">Target country</span>
+            <select
+              value={targetCountry}
+              onChange={(event) =>
+                onChange({
+                  ...profile,
+                  targetCountry: event.target.value as CompanyProfile["country"],
+                  country: event.target.value as CompanyProfile["country"]
+                })
+              }
+              className={FIELD_CONTROL_CLASS}
+            >
+              {COUNTRIES.filter((country) => country !== "Other EU").map((country) => (
+                <option key={country}>{country}</option>
+              ))}
+            </select>
+            {homeCountry === targetCountry ? (
+              <p className="mt-2 text-xs font-semibold text-regRed">
+                Pick a different target country for expansion mode.
+              </p>
+            ) : null}
+          </label>
+        ) : null}
+
         <div className="rounded-lg border border-slateLine bg-primarySoft/70 p-4">
           <p className="text-sm font-semibold text-primary">Positioning guardrail</p>
           <p className="mt-2 text-sm leading-6 text-mutedInk">
-            Output is a readiness assessment and backlog, not legal certification.
+            Output is an evidence-gated readiness pack and backlog, not legal certification.
           </p>
+          {crossBorder ? (
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-regBlue">
+              {expansionRequirements.length} target-market seed rows
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -639,7 +804,9 @@ function CompanyScopeStep({
         <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold">Services / flows</p>
-            <p className="text-sm text-mutedInk">Select every flow that changes the PSD3/PSR scope.</p>
+            <p className="text-sm text-mutedInk">
+              Select every flow that changes the regulatory scope and evidence pack.
+            </p>
           </div>
           <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
             {profile.services.length} selected
@@ -689,6 +856,7 @@ function CompanyScopeStep({
 }
 
 function DocumentsStep({
+  profile,
   documents,
   isExtractingDocuments,
   documentCheck,
@@ -699,6 +867,7 @@ function DocumentsStep({
   onRemoveDocument,
   onRun
 }: {
+  profile: CompanyProfile;
   documents: UploadedDocument[];
   isExtractingDocuments: boolean;
   documentCheck: {
@@ -712,6 +881,8 @@ function DocumentsStep({
   onRemoveDocument: (name: string) => void;
   onRun: () => void;
 }) {
+  const crossBorder = isCrossBorderProfile(profile);
+
   return (
     <Panel>
       <div className="flex flex-col gap-3 border-b border-slateLine pb-6 sm:flex-row sm:items-start sm:justify-between">
@@ -721,7 +892,7 @@ function DocumentsStep({
             Upload the required evidence documents
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-mutedInk">
-            The required document list is generated from the services selected in scope.
+            The required document list is generated from the workspace mode and services.
             Analysis is blocked until every required evidence pack is represented.
           </p>
         </div>
@@ -734,7 +905,7 @@ function DocumentsStep({
         <label className="group flex min-h-[236px] cursor-pointer flex-col justify-between rounded-lg border border-dashed border-primary/25 bg-primarySoft/45 p-5 transition hover:border-regBlue hover:bg-primarySoft">
           <div className="flex items-start gap-3">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface text-primary shadow-sm">
-              <Upload className="h-5 w-5" aria-hidden="true" />
+            <Upload className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
               <p className="font-semibold">Upload PDF, .txt or .md</p>
@@ -744,8 +915,8 @@ function DocumentsStep({
             </div>
           </div>
           <div className="mt-6 rounded-lg border border-slateLine bg-surface px-4 py-3 text-xs leading-5 text-mutedInk shadow-sm">
-            Drop the evidence pack here, or click to browse. Required packs update from
-            the selected services.
+            Drop policies, operating logs, board packs or application checklists here.
+            Required packs update from the selected mode.
           </div>
           <input
             type="file"
@@ -764,6 +935,11 @@ function DocumentsStep({
               <p className="mt-1 text-sm text-mutedInk">
                 {documentCheck.required.length} pack(s), {documentCheck.missing.length} missing.
               </p>
+              {crossBorder ? (
+                <p className="mt-1 text-xs font-semibold text-regBlue">
+                  {getHomeCountry(profile)} to {getTargetCountry(profile)} expansion mode
+                </p>
+              ) : null}
             </div>
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface text-mutedInk">
               <ClipboardList className="h-5 w-5" aria-hidden="true" />
@@ -870,7 +1046,7 @@ function DocumentsStep({
           disabled={isExtractingDocuments}
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink"
         >
-          Run PSD3/PSR readiness assessment
+          Run {crossBorder ? "expansion readiness assessment" : "PSD3/PSR readiness assessment"}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
@@ -879,14 +1055,18 @@ function DocumentsStep({
 }
 
 function ProcessingStep({
+  profile,
   currentIndex,
   isAnalyzing,
   documentCount
 }: {
+  profile: CompanyProfile;
   currentIndex: number;
   isAnalyzing: boolean;
   documentCount: number;
 }) {
+  const crossBorder = isCrossBorderProfile(profile);
+
   return (
     <Panel>
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
@@ -897,7 +1077,7 @@ function ProcessingStep({
           </h1>
           <p className="mt-3 text-sm leading-6 text-mutedInk">
             The workflow reads {documentCount} document(s), maps evidence against
-            source-backed PSD3/PSR controls and prepares a board-ready backlog.
+            source-backed {crossBorder ? "target-market and PSD3/PSR" : "PSD3/PSR"} controls and prepares a board-ready backlog.
           </p>
           <div className="mt-6 rounded-lg border border-slateLine bg-surfaceMuted p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
@@ -979,6 +1159,7 @@ function ResultsDashboard({
   profile,
   onSelectItem,
   onDownloadCsv,
+  onDownloadSubmissionPack,
   onOpenReport,
   onReset
 }: {
@@ -987,9 +1168,12 @@ function ResultsDashboard({
   profile: CompanyProfile;
   onSelectItem: (item: EvidenceMatrixItem) => void;
   onDownloadCsv: () => void;
+  onDownloadSubmissionPack: () => void;
   onOpenReport: () => void;
   onReset: () => void;
 }) {
+  const crossBorder = isCrossBorderProfile(profile);
+
   return (
     <div className="flex flex-col gap-5">
       <Panel>
@@ -997,14 +1181,24 @@ function ResultsDashboard({
           <div>
             <p className="text-sm font-semibold text-regBlue">Step 4</p>
             <h1 className="display-serif mt-1 text-4xl font-normal leading-tight">
-              PSD3/PSR readiness dashboard
+              {crossBorder ? "Expansion readiness dashboard" : "PSD3/PSR readiness dashboard"}
             </h1>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-mutedInk">
-              Evidence matrix and remediation backlog for {profile.companyName}. This is a
-              readiness assessment, not legal advice.
+              Evidence matrix and remediation backlog for {profile.companyName}
+              {crossBorder
+                ? ` expanding from ${getHomeCountry(profile)} to ${getTargetCountry(profile)}`
+                : ""}. This is a readiness assessment, not legal advice.
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
+            <button
+              type="button"
+              onClick={onDownloadSubmissionPack}
+              className={OUTLINE_BUTTON_CLASS}
+            >
+              <FileCheck2 className="h-4 w-4" aria-hidden="true" />
+              Submission pack
+            </button>
             <button
               type="button"
               onClick={onOpenReport}
@@ -1048,7 +1242,8 @@ function ResultsDashboard({
           <div>
             <h2 className="text-xl font-semibold">Readiness matrix</h2>
             <p className="mt-1 text-sm text-mutedInk">
-              {documents.length} document(s) analyzed against the current source-backed requirement base.
+              {documents.length} document(s) analyzed against the current source-backed
+              {crossBorder ? " expansion and PSD3/PSR" : " PSD3/PSR"} requirement base.
             </p>
           </div>
           <span className="rounded-full bg-primarySoft px-3 py-1 text-xs font-semibold text-regBlue">
@@ -1398,6 +1593,8 @@ function ReportModal({
   topGaps: EvidenceMatrixItem[];
   onClose: () => void;
 }) {
+  const crossBorder = isCrossBorderProfile(profile);
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-primary/35 p-4 backdrop-blur-sm print-shell">
       <div className="mx-auto max-w-5xl rounded-lg border border-slateLine bg-surface p-6 shadow-2xl print-card">
@@ -1433,10 +1630,13 @@ function ReportModal({
               {PRODUCT_CONFIG.name}
             </p>
             <h1 className="display-serif mt-2 text-4xl font-normal leading-tight">
-              PSD3/PSR readiness report
+              {crossBorder ? "Expansion readiness report" : "PSD3/PSR readiness report"}
             </h1>
             <p className="mt-2 text-mutedInk">
-              {profile.companyName} - {profile.companyType} - {profile.country}
+              {profile.companyName} - {profile.companyType} -{" "}
+              {crossBorder
+                ? `${getHomeCountry(profile)} to ${getTargetCountry(profile)}`
+                : profile.country}
             </p>
             <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-900">
               {DISCLAIMER}
@@ -1473,6 +1673,16 @@ function ReportModal({
           <section className="print-break">
             <h2 className="text-xl font-semibold">Company profile</h2>
             <div className="mt-3 grid gap-3 rounded-lg border border-slateLine p-4 sm:grid-cols-2">
+              <DetailRow
+                label="Mode"
+                value={MODE_LABELS[profile.assessmentMode ?? "psd3_psr"].title}
+              />
+              {crossBorder ? (
+                <DetailRow
+                  label="Expansion corridor"
+                  value={`${getHomeCountry(profile)} -> ${getTargetCountry(profile)}`}
+                />
+              ) : null}
               <DetailRow label="Services" value={profile.services.join(", ")} />
               <DetailRow label="Documents analyzed" value={documents.map((doc) => doc.name).join(", ")} />
             </div>
@@ -1783,6 +1993,20 @@ function isActiveNav(label: string, screen: Screen) {
   );
 }
 
+function companyTypeForInstitution(
+  institutionType: InstitutionType
+): CompanyProfile["companyType"] {
+  if (institutionType === "EMI" || institutionType === "Small EMI") {
+    return "Electronic Money Institution";
+  }
+
+  if (institutionType === "AISP" || institutionType === "PISP") {
+    return "Open Banking Provider";
+  }
+
+  return "Payment Institution";
+}
+
 async function extractUploadedDocument(file: File): Promise<UploadedDocument> {
   const formData = new FormData();
   formData.append("file", file);
@@ -1863,6 +2087,83 @@ function downloadCsv(result: AnalysisResult) {
   const link = document.createElement("a");
   link.href = url;
   link.download = `${PRODUCT_CONFIG.csvPrefix}-${result.runId}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function downloadSubmissionPack(
+  result: AnalysisResult,
+  profile: CompanyProfile,
+  documents: UploadedDocument[]
+) {
+  const crossBorder = isCrossBorderProfile(profile);
+  const pack = {
+    generatedAt: new Date().toISOString(),
+    product: PRODUCT_CONFIG.name,
+    runId: result.runId,
+    coverLetter: {
+      title: crossBorder
+        ? `${profile.companyName} expansion readiness pack`
+        : `${profile.companyName} PSD3/PSR readiness pack`,
+      companyName: profile.companyName,
+      mode: MODE_LABELS[profile.assessmentMode ?? "psd3_psr"].title,
+      corridor: crossBorder
+        ? {
+            homeCountry: getHomeCountry(profile),
+            targetCountry: getTargetCountry(profile)
+          }
+        : null,
+      disclaimer: result.disclaimer
+    },
+    preFlightChecklist: {
+      totalRequirements: result.summary.totalRequirements,
+      notReadyRows: result.matrix
+        .filter((item) => item.status !== "Covered")
+        .map((item) => ({
+          requirementId: item.requirementId,
+          title: item.requirementTitle,
+          status: item.status,
+          missingEvidence: item.missingEvidence
+        })),
+      uploadedDocuments: documents.map((document) => ({
+        name: document.name,
+        type: document.type,
+        extractedCharacters: document.content.length
+      }))
+    },
+    matrix: result.matrix,
+    roadmap: result.roadmap,
+    auditTrail: [
+      {
+        event: "workspace_scoped",
+        actor: "local-user",
+        at: result.diagnostics?.generatedAt ?? new Date().toISOString(),
+        payload: {
+          companyProfile: profile,
+          documentCount: documents.length
+        }
+      },
+      {
+        event: "analysis_generated",
+        actor: result.diagnostics?.engine ?? "fallback",
+        at: result.diagnostics?.generatedAt ?? new Date().toISOString(),
+        payload: {
+          summary: result.summary,
+          warnings: result.diagnostics?.warnings ?? []
+        }
+      }
+    ],
+    nextMilestone: "Reviewer comments, approval and hash-chain signing are queued after the unified core flow."
+  };
+  const blob = new Blob([JSON.stringify(pack, null, 2)], {
+    type: "application/json;charset=utf-8"
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${PRODUCT_CONFIG.csvPrefix}-submission-pack-${result.runId}.json`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

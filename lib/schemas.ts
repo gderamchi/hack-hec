@@ -1,7 +1,9 @@
 import { z } from "zod";
 import {
   COMPANY_TYPES,
+  ASSESSMENT_MODES,
   COUNTRIES,
+  INSTITUTION_TYPES,
   PRIORITIES,
   SERVICES,
   STATUSES
@@ -10,7 +12,11 @@ import {
 export const companyProfileSchema = z.object({
   companyName: z.string().min(1),
   companyType: z.enum(COMPANY_TYPES),
+  institutionType: z.enum(INSTITUTION_TYPES).optional(),
   country: z.enum(COUNTRIES),
+  homeCountry: z.enum(COUNTRIES).optional(),
+  targetCountry: z.enum(COUNTRIES).optional(),
+  assessmentMode: z.enum(ASSESSMENT_MODES).optional(),
   services: z.array(z.enum(SERVICES)).min(1)
 });
 

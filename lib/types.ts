@@ -19,7 +19,18 @@ export const COUNTRIES = [
   "Spain",
   "Italy",
   "Netherlands",
+  "United Kingdom",
   "Other EU"
+] as const;
+
+export const ASSESSMENT_MODES = ["psd3_psr", "cross_border"] as const;
+
+export const INSTITUTION_TYPES = [
+  "EMI",
+  "Small EMI",
+  "PI",
+  "AISP",
+  "PISP"
 ] as const;
 
 export const SERVICES = [
@@ -51,6 +62,8 @@ export const PRIORITIES = ["Low", "Medium", "High", "Critical"] as const;
 
 export type CompanyType = (typeof COMPANY_TYPES)[number];
 export type Country = (typeof COUNTRIES)[number];
+export type AssessmentMode = (typeof ASSESSMENT_MODES)[number];
+export type InstitutionType = (typeof INSTITUTION_TYPES)[number];
 export type ServiceFlow = (typeof SERVICES)[number];
 export type RequirementStatus = (typeof STATUSES)[number];
 export type Priority = (typeof PRIORITIES)[number];
@@ -60,6 +73,10 @@ export type CompanyProfile = {
   companyType: CompanyType;
   country: Country;
   services: ServiceFlow[];
+  assessmentMode?: AssessmentMode;
+  institutionType?: InstitutionType;
+  homeCountry?: Country;
+  targetCountry?: Country;
 };
 
 export type UploadedDocument = {
@@ -84,7 +101,13 @@ export type Requirement = {
     | "PSD3/PSR provisional agreement"
     | "Instant Payments Regulation"
     | "EBA fraud opinion"
-    | "EBA-ECB fraud report";
+    | "EBA-ECB fraud report"
+    | "Complee regulatory source"
+    | "FCA guidance"
+    | "BaFin guidance"
+    | "ACPR guidance"
+    | "DNB guidance"
+    | "Banco de Espana guidance";
   sourceReference: string;
   sourceUrl: string;
 };
@@ -155,7 +178,11 @@ export type AnalysisDiagnostics = {
 export const EMPTY_COMPANY_PROFILE: CompanyProfile = {
   companyName: "",
   companyType: "Payment Institution",
+  institutionType: "PI",
   country: "France",
+  homeCountry: "France",
+  targetCountry: "United Kingdom",
+  assessmentMode: "cross_border",
   services: []
 };
 

@@ -8,11 +8,15 @@
     "lint": "eslint app data lib scripts --max-warnings=0",
     "start": "next start",
     "test:evidence": "node -r tsconfig-paths/register -r sucrase/register scripts/evidence-gate-regression.ts",
+    "test:complee-mapper": "node -r tsconfig-paths/register -r sucrase/register scripts/complee-mapper-regression.ts",
+    "test:cross-border-backend": "node -r tsconfig-paths/register -r sucrase/register scripts/cross-border-backend-regression.ts",
+    "test:pdf-extract": "node -r tsconfig-paths/register -r sucrase/register scripts/pdf-extract-regression.ts",
     "test:complex": "node -r tsconfig-paths/register -r sucrase/register scripts/complex-usecase-regression.ts",
     "test:complex:prod": "COMPLEX_E2E_TARGET=prod node -r tsconfig-paths/register -r sucrase/register scripts/complex-usecase-regression.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@napi-rs/canvas": "0.1.80",
     "lucide-react": "^0.468.0",
     "next": "16.2.4",
     "pdf-parse": "^2.4.5",

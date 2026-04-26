@@ -1,5 +1,3 @@
-import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import type { UploadedDocument } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -7,6 +5,7 @@ export const maxDuration = 30;
 
 const MAX_FILE_BYTES = 12 * 1024 * 1024;
 const MIN_EXTRACTED_CHARS = 20;
+let pdfParserPromise: Promise<typeof import("pdf-parse").PDFParse> | null = null;
 
 export async function POST(request: Request) {
   const formData = await request.formData().catch(() => null);
@@ -74,13 +73,8 @@ function getExtension(name: string): string {
 }
 
 async function extractPdfText(file: File): Promise<string> {
-  const { PDFParse } = await import("pdf-parse");
+  const PDFParse = await getPdfParser();
   const data = new Uint8Array(await file.arrayBuffer());
-  PDFParse.setWorker(
-    pathToFileURL(
-      join(process.cwd(), "node_modules/pdf-parse/dist/pdf-parse/esm/pdf.worker.mjs")
-    ).href
-  );
   const parser = new PDFParse({ data });
 
   try {
@@ -97,4 +91,28 @@ async function extractPdfText(file: File): Promise<string> {
   } finally {
     await parser.destroy();
   }
+}
+
+function getPdfParser(): Promise<typeof import("pdf-parse").PDFParse> {
+  pdfParserPromise ??= loadPdfParser();
+  return pdfParserPromise;
+}
+
+async function loadPdfParser(): Promise<typeof import("pdf-parse").PDFParse> {
+  await ensurePdfRuntimePolyfills();
+
+  const [{ PDFParse }, { getData }] = await Promise.all([
+    import("pdf-parse"),
+    import("pdf-parse/worker")
+  ]);
+  PDFParse.setWorker(getData());
+  return PDFParse;
+}
+
+async function ensurePdfRuntimePolyfills(): Promise<void> {
+  const canvas = await import("@napi-rs/canvas");
+
+  globalThis.DOMMatrix ??= canvas.DOMMatrix as unknown as typeof DOMMatrix;
+  globalThis.ImageData ??= canvas.ImageData as unknown as typeof ImageData;
+  globalThis.Path2D ??= canvas.Path2D as unknown as typeof Path2D;
 }

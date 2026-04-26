@@ -4,6 +4,7 @@ import type {
   ServiceFlow,
   UploadedDocument
 } from "@/lib/types";
+import { isCrossBorderProfile } from "@/lib/complee-requirement-mapper";
 
 export type RequiredDocument = {
   id: string;
@@ -410,6 +411,79 @@ export const REQUIRED_DOCUMENTS: RequiredDocument[] = [
   }
 ];
 
+export const CROSS_BORDER_REQUIRED_DOCUMENTS: RequiredDocument[] = [
+  {
+    id: "cross-border-authorisation",
+    title: "Home authorisation and target-market licence scope",
+    description:
+      "Existing licence, regulated services perimeter, passporting or authorisation route and target-country application checklist.",
+    requirementIds: [
+      "PSD3-PASSPORT-001",
+      "COMPLEE-GB-CASS15-DAILY-RECON",
+      "COMPLEE-DE-ZAG-AUTHORISATION",
+      "COMPLEE-FR-ACPR-LICENCE",
+      "COMPLEE-ES-BDE-REGISTER"
+    ],
+    keywords: [
+      "authorisation",
+      "authorization",
+      "licence",
+      "license",
+      "passporting",
+      "target market",
+      "service scope",
+      "application checklist",
+      "competent authority",
+      "registration"
+    ]
+  },
+  {
+    id: "cross-border-governance-controls",
+    title: "Local governance, risk and conduct controls",
+    description:
+      "Country-specific governance, risk management, complaints, consumer outcomes and compliance ownership evidence.",
+    requirementIds: [
+      "COMPLEE-GB-CONSUMER-DUTY",
+      "COMPLEE-DE-MARISK-RISK",
+      "COMPLEE-NL-DNB-INTEGRITY"
+    ],
+    keywords: [
+      "governance",
+      "risk management",
+      "consumer duty",
+      "complaints",
+      "customer outcome",
+      "integrity screening",
+      "internal control",
+      "outsourcing",
+      "board"
+    ]
+  },
+  {
+    id: "cross-border-fincrime-safeguarding",
+    title: "Financial crime, safeguarding and operational evidence",
+    description:
+      "MLRO ownership, suspicious activity escalation, safeguarding reconciliations, incident records and operational dashboards.",
+    requirementIds: [
+      "COMPLEE-GB-MLRO-APPOINTMENT",
+      "COMPLEE-GB-CASS15-DAILY-RECON",
+      "PSD3-SAFE-001",
+      "PSR-FRAUD-REPORT-001"
+    ],
+    keywords: [
+      "mlro",
+      "financial crime",
+      "suspicious activity",
+      "safeguarding",
+      "reconciliation",
+      "customer funds",
+      "incident",
+      "dashboard",
+      "audit event"
+    ]
+  }
+];
+
 export function evaluateRequiredDocuments(
   companyProfile: CompanyProfile,
   documents: UploadedDocument[]
@@ -428,7 +502,13 @@ export function evaluateRequiredDocuments(
 }
 
 export function getRequiredDocuments(companyProfile: CompanyProfile): RequiredDocument[] {
-  const required = REQUIRED_DOCUMENTS.filter((requirement) => {
+  const sourceDocuments = isCrossBorderProfile(companyProfile)
+    ? [...CROSS_BORDER_REQUIRED_DOCUMENTS, ...REQUIRED_DOCUMENTS]
+    : REQUIRED_DOCUMENTS;
+  const required = sourceDocuments.filter((requirement) => {
+    const modeOnlyRequirement =
+      isCrossBorderProfile(companyProfile) &&
+      CROSS_BORDER_REQUIRED_DOCUMENTS.some((item) => item.id === requirement.id);
     const companyTypeMatches =
       requirement.appliesToCompanyTypes?.includes(companyProfile.companyType) ?? false;
     const serviceMatches =
@@ -436,7 +516,7 @@ export function getRequiredDocuments(companyProfile: CompanyProfile): RequiredDo
         companyProfile.services.includes(service)
       ) ?? false;
 
-    return companyTypeMatches || serviceMatches;
+    return modeOnlyRequirement || companyTypeMatches || serviceMatches;
   });
 
   return Array.from(new Map(required.map((requirement) => [requirement.id, requirement])).values());

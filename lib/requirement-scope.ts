@@ -1,4 +1,8 @@
 import { PSD3_PSR_REQUIREMENTS } from "@/data/psd3-psr-requirements";
+import {
+  getCompleeExpansionRequirements,
+  isCrossBorderProfile
+} from "@/lib/complee-requirement-mapper";
 import type {
   CompanyProfile,
   Requirement,
@@ -77,9 +81,18 @@ const SERVICE_SIGNALS: ServiceSignal[] = [
 export function getRelevantRequirements(
   companyProfile: CompanyProfile
 ): Requirement[] {
-  return PSD3_PSR_REQUIREMENTS.filter((requirement) =>
+  const psd3PsrRequirements = PSD3_PSR_REQUIREMENTS.filter((requirement) =>
     isRelevantRequirement(requirement, companyProfile)
   );
+
+  if (!isCrossBorderProfile(companyProfile)) {
+    return psd3PsrRequirements;
+  }
+
+  return uniqueRequirements([
+    ...getCompleeExpansionRequirements(companyProfile),
+    ...psd3PsrRequirements
+  ]);
 }
 
 export function isRelevantRequirement(
@@ -117,11 +130,35 @@ export function buildScopeWarnings(
     (service) => !selected.has(service)
   );
 
-  if (unselectedDocumentServices.length === 0) {
-    return [];
+  const warnings: string[] = [];
+
+  if (unselectedDocumentServices.length > 0) {
+    warnings.push(
+      `Uploaded documents mention service(s) outside the selected analysis scope: ${unselectedDocumentServices.join(", ")}. These are not used as covered evidence unless selected.`
+    );
   }
 
-  return [
-    `Uploaded documents mention service(s) outside the selected analysis scope: ${unselectedDocumentServices.join(", ")}. These are not used as covered evidence unless selected.`
-  ];
+  if (
+    isCrossBorderProfile(companyProfile) &&
+    companyProfile.homeCountry === companyProfile.targetCountry
+  ) {
+    warnings.push(
+      "Cross-border mode is selected but home and target countries match; expansion-specific requirements may be limited."
+    );
+  }
+
+  return warnings;
+}
+
+function uniqueRequirements(requirements: Requirement[]): Requirement[] {
+  const seen = new Set<string>();
+
+  return requirements.filter((requirement) => {
+    if (seen.has(requirement.id)) {
+      return false;
+    }
+
+    seen.add(requirement.id);
+    return true;
+  });
 }

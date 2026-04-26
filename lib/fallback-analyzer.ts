@@ -316,6 +316,54 @@ export const ANALYSIS_KEYWORD_RULES: Record<string, KeywordRule> = {
     strongKeywords: ["semi-annual reporting", "competent authority", "fraud trend", "reporting workflow"],
     task: "Build fraud data reporting and trend review evidence",
     owner: "Fraud Data + Compliance"
+  },
+  "COMPLEE-GB-CASS15-DAILY-RECON": {
+    keywords: ["cass 15", "safeguarding", "daily reconciliation", "customer funds"],
+    strongKeywords: ["reconciliation log", "safeguarded account balance", "exception approval"],
+    task: "Create FCA safeguarding reconciliation evidence pack",
+    owner: "Finance + Compliance"
+  },
+  "COMPLEE-GB-CONSUMER-DUTY": {
+    keywords: ["consumer duty", "customer outcome", "vulnerable customer", "board attestation"],
+    strongKeywords: ["outcome monitoring dashboard", "board attestation", "customer communication test"],
+    task: "Localize Consumer Duty outcome monitoring and board evidence",
+    owner: "Product + Compliance"
+  },
+  "COMPLEE-GB-MLRO-APPOINTMENT": {
+    keywords: ["mlro", "financial crime", "suspicious activity", "money laundering reporting officer"],
+    strongKeywords: ["mlro appointment record", "suspicious activity reporting workflow"],
+    task: "Evidence MLRO appointment and UK financial-crime governance",
+    owner: "Financial Crime Compliance"
+  },
+  "COMPLEE-DE-ZAG-AUTHORISATION": {
+    keywords: ["zag", "bafin", "german licence", "authorisation application"],
+    strongKeywords: ["bafin authorisation application checklist", "german licence scope mapping"],
+    task: "Prepare BaFin ZAG authorisation package",
+    owner: "Legal + Compliance"
+  },
+  "COMPLEE-DE-MARISK-RISK": {
+    keywords: ["marisk", "risk management", "outsourcing risk", "internal control"],
+    strongKeywords: ["marisk-aligned risk control framework", "internal control test evidence"],
+    task: "Adapt risk and outsourcing controls to MaRisk expectations",
+    owner: "Risk + Engineering"
+  },
+  "COMPLEE-FR-ACPR-LICENCE": {
+    keywords: ["acpr", "programme of operations", "french licence", "internal control file"],
+    strongKeywords: ["acpr licence application checklist", "programme of operations"],
+    task: "Prepare ACPR authorisation evidence pack",
+    owner: "Legal + Compliance"
+  },
+  "COMPLEE-NL-DNB-INTEGRITY": {
+    keywords: ["dnb", "integrity screening", "fit and proper", "wft"],
+    strongKeywords: ["dnb integrity screening file", "management fitness and propriety evidence"],
+    task: "Prepare DNB integrity and governance file",
+    owner: "Compliance Leadership"
+  },
+  "COMPLEE-ES-BDE-REGISTER": {
+    keywords: ["banco de espana", "spanish service registration", "royal decree-law", "complaints handling"],
+    strongKeywords: ["spanish service registration checklist", "regulatory reporting owner matrix"],
+    task: "Prepare Spanish registration and conduct-control evidence",
+    owner: "Compliance Operations"
   }
 };
 

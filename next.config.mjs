@@ -8,7 +8,7 @@ const nextConfig = {
   typedRoutes: false,
   devIndicators: false,
   allowedDevOrigins: ["127.0.0.1"],
-  serverExternalPackages: ["pdf-parse"],
+  serverExternalPackages: ["@napi-rs/canvas", "pdf-parse"],
   turbopack: {
     root: __dirname
   }

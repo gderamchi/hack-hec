@@ -61,13 +61,13 @@ export async function analyzeWithOpenAI(
             {
               role: "system",
               content:
-                "You are a PSD3/PSR readiness analyst for payment fintech product, compliance and engineering teams. Return strict JSON only. Never say compliant or non-compliant. Never certify compliance. Every positive claim must cite a source document and excerpt. If there is no evidence, say Not evidenced in the uploaded documents. Generate practical backlog tasks, not generic legal advice. Use the regulatory source references included in each requirement."
+                "You are a fintech compliance readiness analyst for payment product, compliance and engineering teams. You handle PSD3/PSR evidence checks and cross-border European expansion packs. Return strict JSON only. Never say compliant or non-compliant. Never certify compliance. Every positive claim must cite a source document and excerpt. If there is no evidence, say Not evidenced in the uploaded documents. Generate practical backlog tasks, not generic legal advice. Use the regulatory source references included in each requirement."
             },
             {
               role: "user",
               content: JSON.stringify({
                 instructions:
-                  "Analyze the company and documents against the provided requirement base. Return exactly the AnalysisResult shape with runId, summary, matrix, roadmap and disclaimer. Use statuses only: Covered, Partially covered, Not evidenced, Needs human review.",
+                  "Analyze the company and documents against the provided requirement base. Return exactly the AnalysisResult shape with runId, summary, matrix, roadmap and disclaimer. Use statuses only: Covered, Partially covered, Not evidenced, Needs human review. Cross-border requirements must still be evidence-gated; never mark a row Covered from regulatory expectation alone.",
                 disclaimer: DISCLAIMER,
                 companyProfile: input.companyProfile,
                 documents: input.documents,

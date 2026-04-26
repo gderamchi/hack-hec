@@ -1,8 +1,8 @@
 export const PRODUCT_CONFIG = {
-  name: process.env.NEXT_PUBLIC_PRODUCT_NAME ?? "CompliancePilot",
-  shortName: process.env.NEXT_PUBLIC_PRODUCT_SHORT_NAME ?? "CompliancePilot",
-  tagline: "PSD3/PSR readiness workspace",
-  csvPrefix: "compliancepilot-psd3"
+  name: process.env.NEXT_PUBLIC_PRODUCT_NAME ?? "Complee",
+  shortName: process.env.NEXT_PUBLIC_PRODUCT_SHORT_NAME ?? "Complee",
+  tagline: "AI compliance workspace for fintech expansion",
+  csvPrefix: "complee-readiness"
 } as const;
 
 export const DEFAULT_OPENAI_MODEL = "gpt-5.4-mini";
@@ -40,5 +40,25 @@ export const REGULATORY_SOURCE_SUMMARY = [
   {
     label: "EBA-ECB 2025 payment fraud report",
     url: "https://www.eba.europa.eu/publications-and-media/press-releases/joint-eba-ecb-report-payment-fraud-strong-authentication-remains-effective-fraudsters-are-adapting"
+  },
+  {
+    label: "FCA payment and e-money safeguarding regime",
+    url: "https://www.fca.org.uk/publications/policy-statements/ps25-12-changes-safeguarding-regime-payments-and-e-money-firms"
+  },
+  {
+    label: "BaFin payment services authorisation",
+    url: "https://www.bafin.de/EN/Aufsicht/ZahlungsdienstePSD2/ZulassungsverfahrenundLaufendeAufsicht/ZulassungsverfahrenundLaufendeAufsicht_node_en.html"
+  },
+  {
+    label: "ACPR authorisation portal",
+    url: "https://acpr.banque-france.fr/en"
+  },
+  {
+    label: "DNB supervision portal",
+    url: "https://www.dnb.nl/en"
+  },
+  {
+    label: "Banco de Espana supervision portal",
+    url: "https://www.bde.es/wbe/en"
   }
 ] as const;
