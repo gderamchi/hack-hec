@@ -1,0 +1,443 @@
+{
+  "compliance_profiles": [
+    {
+      "created_at": "2026-04-26T00:23:50.725Z",
+      "updated_at": "2026-04-26T00:23:50.725Z",
+      "id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "company_name": "Unified Hackathon Fintech",
+      "operating_model": {
+        "companyName": "Unified Hackathon Fintech",
+        "companyType": "Neobank",
+        "country": "UK",
+        "services": [
+          "Card issuance",
+          "Open Banking"
+        ],
+        "techStack": [
+          "AWS"
+        ],
+        "teams": [
+          "Engineering",
+          "Compliance"
+        ],
+        "internalAssets": [
+          {
+            "id": "ast-1",
+            "name": "Open Banking API",
+            "type": "api"
+          }
+        ],
+        "vendors": [
+          "AWS"
+        ]
+      },
+      "active_regulations": [
+        "DORA",
+        "PSD3/PSR"
+      ]
+    }
+  ],
+  "regulation_change_events": [
+    {
+      "created_at": "2026-04-26T00:24:22.430Z",
+      "updated_at": "2026-04-26T00:24:22.430Z",
+      "detected_at": "2026-04-26T00:24:22.430Z",
+      "id": "7f6dcd86-5821-4400-bd8b-5fb66e07df3e",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "regulation_name": "DORA",
+      "jurisdiction": "EU",
+      "change_summary": "The European Banking Authority has revised reporting requirements and mandates regarding ICT incident management for Tier 1 financial entities, including a reduced reporting window, automated detection systems, indemnification clauses in vendor contracts, and quarterly risk attestation.",
+      "regulation_text": "AMENDMENT NOTICE — DORA Article 17 Revised (effective 1 June 2026)\nThe European Banking Authority has issued a binding revision to the Digital Operational Resilience Act (EU) 2022/2554.\n\nKEY CHANGES:\n1. ICT incident reporting window reduced from 24 hours to 4 hours for major incidents\n2. Automated detection systems required for all Tier 1 financial entities by 31 December 2026\n3. Vendor contracts must include indemnification clauses for ICT outages exceeding 4 hours\n4. Board-level ICT risk attestation now required quarterly (previously annual)\n5. New requirement: real-time threat intelligence sharing with regulatory sandbox\n\nFULL TEXT: Financial entities must report all major ICT-related incidents to the competent authority within four (4) hours of classification, replacing the previous twenty-four (24) hour window. Major incidents are defined as those meeting two or more of the following criteria: (a) impact on more than 50,000 users; (b) service downtime exceeding 30 minutes; (c) data integrity breach affecting customer records. Automated detection systems capable of classifying incidents within one hour must be deployed by 31 December 2026. Third-party ICT service provider contracts must include indemnification provisions for qualifying outages. The management body must quarterly attest to the effectiveness of ICT risk management controls and submit attestation evidence to the competent authority.",
+      "relevance_score": 80,
+      "status": "pending_review",
+      "propagation_result": {
+        "regulation_name": "Digital Operational Resilience Act (DORA)",
+        "jurisdiction": "European Union",
+        "change_type": "modification",
+        "summary": "The European Banking Authority has revised reporting requirements and mandates regarding ICT incident management for Tier 1 financial entities, including a reduced reporting window, automated detection systems, indemnification clauses in vendor contracts, and quarterly risk attestation.",
+        "relevance_score": 80,
+        "total_obligations": 5,
+        "relevant_obligations": 4,
+        "propagations": [
+          {
+            "obligation_id": "ict_reporting_001",
+            "obligation_description": "Report all major ICT-related incidents to the competent authority within four hours of classification.",
+            "relevant": true,
+            "relevance_reason": "Unified Hackathon Fintech, as a neobank, must comply with incident reporting timelines.",
+            "affected_teams": [
+              "Compliance"
+            ],
+            "affected_assets": [
+              {
+                "assetId": "ast-1",
+                "assetName": "Open Banking API",
+                "action": "update",
+                "urgency": "critical",
+                "reason": "Update reporting procedures and timelines."
+              }
+            ],
+            "affected_vendors": [],
+            "action_plan": [
+              {
+                "team": "Compliance",
+                "task": "Establish incident classification procedures and reporting timeline training.",
+                "effort": "high",
+                "deadline": "60 days"
+              }
+            ],
+            "compliance_status": "non_compliant",
+            "gap_severity": "critical"
+          },
+          {
+            "obligation_id": "automated_detection_001",
+            "obligation_description": "Deploy automated detection systems capable of classifying incidents within one hour by 31 December 2026.",
+            "relevant": true,
+            "relevance_reason": "To manage ICT incidents effectively, the company must employ automated detection systems.",
+            "affected_teams": [
+              "Engineering"
+            ],
+            "affected_assets": [],
+            "affected_vendors": [
+              {
+                "vendorName": "AWS",
+                "action": "procure services",
+                "urgency": "critical"
+              }
+            ],
+            "action_plan": [
+              {
+                "team": "Engineering",
+                "task": "Procure and install automated detection solutions by deadline.",
+                "effort": "high",
+                "deadline": "180 days"
+              }
+            ],
+            "compliance_status": "non_compliant",
+            "gap_severity": "high"
+          },
+          {
+            "obligation_id": "vendor_contracts_001",
+            "obligation_description": "Include indemnification clauses in vendor contracts for ICT outages exceeding four hours.",
+            "relevant": true,
+            "relevance_reason": "Vendor management is crucial, particularly with the reliance on AWS.",
+            "affected_teams": [
+              "Compliance"
+            ],
+            "affected_assets": [],
+            "affected_vendors": [
+              {
+                "vendorName": "AWS",
+                "action": "update contracts",
+                "urgency": "high"
+              }
+            ],
+            "action_plan": [
+              {
+                "team": "Compliance",
+                "task": "Review and negotiate indemnification terms with AWS.",
+                "effort": "medium",
+                "deadline": "90 days"
+              }
+            ],
+            "compliance_status": "non_compliant",
+            "gap_severity": "medium"
+          },
+          {
+            "obligation_id": "risk_attestation_001",
+            "obligation_description": "Quarterly attest to the effectiveness of ICT risk management controls and submit evidence to the competent authority.",
+            "relevant": false,
+            "relevance_reason": "There are no operational actions specific to the current model that directly address this obligation.",
+            "affected_teams": [],
+            "affected_assets": [],
+            "affected_vendors": [],
+            "action_plan": [],
+            "compliance_status": "partially_compliant",
+            "gap_severity": "low"
+          }
+        ],
+        "impact_summary": {
+          "affected_teams": [
+            {
+              "team": "Compliance",
+              "obligation_count": 3,
+              "top_action": "Establish incident classification and reporting timelines."
+            },
+            {
+              "team": "Engineering",
+              "obligation_count": 1,
+              "top_action": "Procure automated detection solutions."
+            }
+          ],
+          "affected_assets": [
+            {
+              "assetId": "ast-1",
+              "assetName": "Open Banking API"
+            }
+          ],
+          "affected_vendors": [
+            {
+              "vendorName": "AWS"
+            }
+          ],
+          "critical_actions": [
+            "Establish incident classification procedures and reporting timelines.",
+            "Procure automated detection solutions.",
+            "Review and negotiate indemnification terms with AWS."
+          ],
+          "quick_wins": []
+        }
+      },
+      "extraction_result": {
+        "regulation_name": "Digital Operational Resilience Act (DORA)",
+        "jurisdiction": "European Union",
+        "effective_date": "2026-06-01",
+        "change_type": "modification",
+        "summary": "The European Banking Authority has revised reporting requirements and mandates regarding ICT incident management for Tier 1 financial entities, including a reduced reporting window, automated detection systems, indemnification clauses in vendor contracts, and quarterly risk attestation.",
+        "affected_entities": [
+          "Tier 1 financial entities"
+        ],
+        "obligation_groups": [
+          {
+            "group_name": "ICT Incident Management",
+            "category": "reporting",
+            "obligations": [
+              {
+                "obligation_id": "ict_reporting_001",
+                "description": "Report all major ICT-related incidents to the competent authority within four hours of classification.",
+                "applies_to": [
+                  "Tier 1 financial entities"
+                ],
+                "risk_level": "high",
+                "control_type": "detective",
+                "system_impacted": [
+                  "incident reporting systems"
+                ],
+                "depends_on": [],
+                "operational_actions": [
+                  "Establish incident classification procedures",
+                  "Train staff on the new reporting timeline",
+                  "Implement a reporting protocol to the competent authority"
+                ],
+                "penalty_if_non_compliant": "Regulatory fines and sanctions"
+              }
+            ]
+          },
+          {
+            "group_name": "Automated Detection Systems",
+            "category": "monitoring",
+            "obligations": [
+              {
+                "obligation_id": "automated_detection_001",
+                "description": "Deploy automated detection systems capable of classifying incidents within one hour by 31 December 2026.",
+                "applies_to": [
+                  "Tier 1 financial entities"
+                ],
+                "risk_level": "high",
+                "control_type": "preventive",
+                "system_impacted": [
+                  "IT monitoring systems"
+                ],
+                "depends_on": [],
+                "operational_actions": [
+                  "Procure and install automated detection solutions",
+                  "Conduct testing of detection capabilities",
+                  "Ensure systems are integrated into incident response workflows"
+                ],
+                "penalty_if_non_compliant": "Regulatory fines and operational risk exposure"
+              }
+            ]
+          },
+          {
+            "group_name": "Vendor Management",
+            "category": "governance",
+            "obligations": [
+              {
+                "obligation_id": "vendor_contracts_001",
+                "description": "Include indemnification clauses in vendor contracts for ICT outages exceeding four hours.",
+                "applies_to": [
+                  "Tier 1 financial entities"
+                ],
+                "risk_level": "medium",
+                "control_type": "preventive",
+                "system_impacted": [
+                  "contract management systems"
+                ],
+                "depends_on": [],
+                "operational_actions": [
+                  "Review and update existing vendor contracts",
+                  "Negotiate indemnification terms with vendors",
+                  "Ensure contracts comply with new requirements"
+                ],
+                "penalty_if_non_compliant": "Potential legal liabilities and financial exposure"
+              }
+            ]
+          },
+          {
+            "group_name": "Risk Management Attestation",
+            "category": "governance",
+            "obligations": [
+              {
+                "obligation_id": "risk_attestation_001",
+                "description": "Quarterly attest to the effectiveness of ICT risk management controls and submit evidence to the competent authority.",
+                "applies_to": [
+                  "Tier 1 financial entities"
+                ],
+                "risk_level": "medium",
+                "control_type": "corrective",
+                "system_impacted": [
+                  "risk management systems"
+                ],
+                "depends_on": [],
+                "operational_actions": [
+                  "Establish a quarterly review process for ICT risk controls",
+                  "Document and compile attestation evidence",
+                  "Submit attestation reports to the competent authority"
+                ],
+                "penalty_if_non_compliant": "Regulatory fines and loss of license to operate"
+              }
+            ]
+          },
+          {
+            "group_name": "Real-Time Threat Intelligence Sharing",
+            "category": "governance",
+            "obligations": [
+              {
+                "obligation_id": "threat_intelligence_001",
+                "description": "Implement real-time threat intelligence sharing mechanisms with the regulatory sandbox.",
+                "applies_to": [
+                  "Tier 1 financial entities"
+                ],
+                "risk_level": "high",
+                "control_type": "preventive",
+                "system_impacted": [
+                  "threat intelligence platforms"
+                ],
+                "depends_on": [],
+                "operational_actions": [
+                  "Develop protocols for threat intelligence sharing",
+                  "Integrate systems with regulatory sandbox for real-time data exchange",
+                  "Train staff on compliance and reporting requirements"
+                ],
+                "penalty_if_non_compliant": "Regulatory fines and reputational risk"
+              }
+            ]
+          }
+        ],
+        "triggers": [],
+        "keywords": [
+          "DORA",
+          "ICT incidents",
+          "reporting",
+          "automated detection",
+          "vendor contracts",
+          "risk management",
+          "threat intelligence"
+        ],
+        "source_reference": "EU Regulation 2022/2554"
+      }
+    }
+  ],
+  "remediation_plans": [
+    {
+      "created_at": "2026-04-26T00:24:23.184Z",
+      "updated_at": "2026-04-26T00:24:23.184Z",
+      "id": "98ea2bc2-3f63-40cd-b7d2-019c0f34439f",
+      "change_event_id": "7f6dcd86-5821-4400-bd8b-5fb66e07df3e",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "actions": [
+        {
+          "id": "5446dd1d-31f3-40f3-830e-51c37749abf4",
+          "team": "Compliance",
+          "task": "Establish incident classification procedures and reporting timeline training.",
+          "effort": "high",
+          "deadline": "60 days",
+          "assetName": "Open Banking API",
+          "assetAction": "update",
+          "obligation_id": "ict_reporting_001",
+          "urgency": "critical",
+          "status": "pending"
+        },
+        {
+          "id": "e45205c6-4706-46f6-822a-8a20eaac0737",
+          "team": "Engineering",
+          "task": "Procure and install automated detection solutions by deadline.",
+          "effort": "high",
+          "deadline": "180 days",
+          "vendorName": "AWS",
+          "obligation_id": "automated_detection_001",
+          "urgency": "high",
+          "status": "pending"
+        },
+        {
+          "id": "94caf5c8-c6d6-42e8-b55e-73c098ceebb1",
+          "team": "Compliance",
+          "task": "Review and negotiate indemnification terms with AWS.",
+          "effort": "medium",
+          "deadline": "90 days",
+          "vendorName": "AWS",
+          "obligation_id": "vendor_contracts_001",
+          "urgency": "medium",
+          "status": "pending"
+        }
+      ],
+      "conflict_flags": [],
+      "conflict_check_status": "safe",
+      "status": "draft"
+    }
+  ],
+  "agent_activity_log": [
+    {
+      "created_at": "2026-04-26T00:23:50.751Z",
+      "updated_at": "2026-04-26T00:23:50.751Z",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "event_type": "scan_started",
+      "message": "Agent scan started for Unified Hackathon Fintech — checking DORA",
+      "metadata": null
+    },
+    {
+      "created_at": "2026-04-26T00:23:50.751Z",
+      "updated_at": "2026-04-26T00:23:50.751Z",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "event_type": "change_detected",
+      "message": "DORA: amendment detected — extracting obligations via AI",
+      "metadata": null
+    },
+    {
+      "created_at": "2026-04-26T00:24:08.503Z",
+      "updated_at": "2026-04-26T00:24:08.503Z",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "event_type": "change_detected",
+      "message": "DORA: propagating to Unified Hackathon Fintech profile",
+      "metadata": null
+    },
+    {
+      "created_at": "2026-04-26T00:24:22.432Z",
+      "updated_at": "2026-04-26T00:24:22.432Z",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "event_type": "conflict_check",
+      "message": "DORA: cross-checking against PSD3/PSR",
+      "metadata": null
+    },
+    {
+      "created_at": "2026-04-26T00:24:23.187Z",
+      "updated_at": "2026-04-26T00:24:23.187Z",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "event_type": "plan_generated",
+      "message": "DORA: 80% relevant — plan generated with 3 actions",
+      "metadata": {
+        "eventId": "7f6dcd86-5821-4400-bd8b-5fb66e07df3e",
+        "planId": "98ea2bc2-3f63-40cd-b7d2-019c0f34439f",
+        "relevanceScore": 80,
+        "actionsCount": 3
+      }
+    },
+    {
+      "created_at": "2026-04-26T00:24:23.188Z",
+      "updated_at": "2026-04-26T00:24:23.188Z",
+      "profile_id": "017a0967-2194-46ba-bc45-9e92ef29d5ed",
+      "event_type": "scan_complete",
+      "message": "Scan complete — 1 new plan(s) created",
+      "metadata": null
+    }
+  ]
+}
