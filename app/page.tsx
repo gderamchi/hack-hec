@@ -21,6 +21,7 @@ import {
   Upload,
   X
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   evaluateRequiredDocuments,
@@ -426,16 +427,33 @@ function AppHeader({
           ))}
         </div>
 
-        <button
-          type="button"
-          onClick={onStart}
-          aria-label="Create workspace"
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-ink sm:px-4"
-        >
-          <Play className="h-4 w-4" aria-hidden="true" />
-          <span className="whitespace-nowrap sm:hidden">New</span>
-          <span className="hidden whitespace-nowrap sm:inline">New workspace</span>
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/monitor"
+            className="hidden items-center justify-center gap-2 rounded-lg border border-slateLine bg-surface px-3 py-2 text-sm font-semibold text-mutedInk shadow-sm transition hover:border-muted hover:bg-surfaceMuted lg:inline-flex"
+          >
+            <Search className="h-4 w-4" aria-hidden="true" />
+            RegPropagator
+          </Link>
+          <Link
+            href="/agent"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-primarySoft px-3 py-2 text-sm font-semibold text-primary shadow-sm transition hover:border-primary/40"
+          >
+            <BrainCircuit className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Live Agent</span>
+            <span className="sm:hidden">Agent</span>
+          </Link>
+          <button
+            type="button"
+            onClick={onStart}
+            aria-label="Create workspace"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-ink sm:px-4"
+          >
+            <Play className="h-4 w-4" aria-hidden="true" />
+            <span className="whitespace-nowrap sm:hidden">New</span>
+            <span className="hidden whitespace-nowrap sm:inline">New workspace</span>
+          </button>
+        </div>
       </div>
       <div className="hidden border-t border-primary/10 bg-primary px-4 py-3 text-center text-sm font-medium text-white sm:block">
         Cross-border expansion, PSD3/PSR evidence and submission readiness in one workspace
